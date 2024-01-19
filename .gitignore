@@ -160,3 +160,6 @@ cython_debug/
 .idea/
 
 bin
+
+scripts/ssh/id_rsa
+scripts/ssh/id_rsa.pub
