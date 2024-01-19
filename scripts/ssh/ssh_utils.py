@@ -76,11 +76,11 @@ def ssh_login(hostname, username, private_key_path, passphrase=None):
         client.close()
 
 if __name__ == "__main__":
-    # Hardcoded values for automatic login
+
     ubuntu_hostname = ssh_config_dict["host"]
     ubuntu_username = ssh_config_dict["user"]
-    key_filename = 'id_rsa'  # Adjust if needed
-    passphrase = None  # No passphrase for automatic login
+    key_filename = 'id_rsa'
+    passphrase = None
 
     private_key_path, public_key_path = generate_or_load_ssh_keypair(key_filename=key_filename, passphrase=passphrase)
     authenticate_and_copy_key(ubuntu_hostname, ubuntu_username, private_key_path, passphrase)
