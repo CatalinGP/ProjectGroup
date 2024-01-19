@@ -6,4 +6,3 @@ ssh_config_dict = {
     "user": "dummy"
 }
 
-current_dir = os.path.dirname(__file__)
