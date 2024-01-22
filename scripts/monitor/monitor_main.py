@@ -4,6 +4,7 @@ import time
 import logging
 from scripts.ssh import ssh_utils
 from config.ssh_configs import ssh_config_dict
+from config.GUI_input import provide_input
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -32,7 +33,10 @@ def run():
                                                ssh_port,
                                                ssh_user,
                                                local_public_key_path,
-                                               ssh_key_filepath):
+                                               ssh_key_filepath,
+                                               provide_input(title="Authentication",
+                                                             prompt="Provide Guest OS root password ")
+                                               ):
             logger.error("Failed to copy the public key to VM.")
             return {}
 

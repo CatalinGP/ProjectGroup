@@ -5,7 +5,7 @@ import logging
 from paramiko.ssh_exception import AuthenticationException
 from paramiko import SSHClient, AutoAddPolicy, RSAKey, SSHException
 from scp import SCPClient
-from config.GUI_input import provide_input
+# from config.GUI_input import provide_input
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def is_vm_reachable(ssh_host):
         return False
 
 
-def copy_public_key_to_vm(ssh_host, ssh_port, ssh_user, local_public_key_path, ssh_key_filepath):
+def copy_public_key_to_vm(ssh_host, ssh_port, ssh_user, local_public_key_path, ssh_key_filepath, password):
     try:
         with SSHClient() as ssh_client:
             ssh_client.set_missing_host_key_policy(AutoAddPolicy())
@@ -47,18 +47,10 @@ def copy_public_key_to_vm(ssh_host, ssh_port, ssh_user, local_public_key_path, s
             try:
                 ssh_key = RSAKey.from_private_key_file(ssh_key_filepath)
                 ssh_client.connect(hostname=ssh_host, port=ssh_port, username=ssh_user, pkey=ssh_key)
-
-                with open(local_public_key_path, 'r') as local_public_key_file:
-                    public_key = local_public_key_file.read()
-
-                ssh_client.exec_command(f'echo "{public_key}" >> ~/.ssh/authorized_keys')
-
-                return True
             except AuthenticationException as key_auth_error:
                 logger.warning(f"SSH key-based authentication failed: {key_auth_error}")
 
-            ssh_password = provide_input(title="Authentication", prompt="Provide Guest OS root password ")
-            ssh_client.connect(hostname=ssh_host, port=ssh_port, username=ssh_user, password=ssh_password)
+            ssh_client.connect(hostname=ssh_host, port=ssh_port, username=ssh_user, password=password)
 
             with open(local_public_key_path, 'r') as local_public_key_file:
                 public_key = local_public_key_file.read()

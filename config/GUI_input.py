@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import simpledialog
 
+
 def provide_input(title, prompt):
     try:
         root = tk.Tk()
