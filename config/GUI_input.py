@@ -19,6 +19,3 @@ def provide_input(title, prompt):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-
-
-provide_input(title="Authentication", prompt="Provide Guest OS root password ")

@@ -1,5 +1,4 @@
 import os
-import sys
 import time
 import logging
 from scripts.ssh import ssh_utils
@@ -18,7 +17,6 @@ def run():
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
     target_one_level_upper = os.path.abspath(os.path.join(base_dir, os.pardir))
-    # target_two_level_upper = os.path.abspath(os.path.join(base_dir, os.pardir, os.pardir))
     local_status_script_path = os.path.join(target_one_level_upper, "transfer_to", script_filename)
 
     config_dir = os.path.abspath(os.path.join(base_dir, os.pardir, os.pardir, 'config'))
@@ -58,4 +56,4 @@ def run():
         return {}
 
 
-run() # TEST
+run()
