@@ -44,12 +44,12 @@ def run():
             logger.info("Waiting for VM to become reachable...")
             time.sleep(30)
 
-        if not ssh_utils.transfer_status_script(ssh_key_filepath,
-                                                ssh_host,
-                                                ssh_port,
-                                                ssh_user,
-                                                local_status_script_path,
-                                                remote_script_path):
+        if not ssh_utils.transfer_script(ssh_key_filepath,
+                                         ssh_host,
+                                         ssh_port,
+                                         ssh_user,
+                                         local_status_script_path,
+                                         remote_script_path):
             logger.error("Failed to transfer the status script.")
             return {}
 

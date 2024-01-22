@@ -67,7 +67,7 @@ def copy_public_key_to_vm(ssh_host, ssh_port, ssh_user, local_public_key_path, s
     return False
 
 
-def transfer_status_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status_script_path, remote_script_path):
+def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status_script_path, remote_script_path):
     try:
         ssh_key = RSAKey.from_private_key_file(ssh_key_filepath)
         with SSHClient() as ssh_client:
