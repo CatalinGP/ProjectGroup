@@ -5,6 +5,7 @@ import logging
 from paramiko.ssh_exception import AuthenticationException
 from paramiko import SSHClient, AutoAddPolicy, RSAKey, SSHException
 from scp import SCPClient
+from config.vm_configs import script_filename
 # from config.GUI_input import provide_input
 
 logging.basicConfig(level=logging.INFO)
@@ -75,6 +76,9 @@ def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status
             ssh_client.connect(hostname=ssh_host, port=ssh_port, username=ssh_user, pkey=ssh_key)
             with SCPClient(ssh_client.get_transport()) as scp_client:
                 scp_client.put(local_status_script_path, remote_script_path)
+
+                ssh_client.exec_command(f'chmod +x {script_filename}')
+
         logger.info(f"SCP: File transferred successfully")
         return True
     except SSHException as e:

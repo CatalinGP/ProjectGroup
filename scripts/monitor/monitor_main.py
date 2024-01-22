@@ -5,6 +5,7 @@ import logging
 from scripts.ssh import ssh_utils
 from config.ssh_configs import ssh_config_dict
 from config.GUI_input import provide_input
+from config.vm_configs import script_filename
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -18,7 +19,6 @@ def run():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     target_one_level_upper = os.path.abspath(os.path.join(base_dir, os.pardir))
     # target_two_level_upper = os.path.abspath(os.path.join(base_dir, os.pardir, os.pardir))
-    script_filename = "vm_status.sh"
     local_status_script_path = os.path.join(target_one_level_upper, "transfer_to", script_filename)
 
     config_dir = os.path.abspath(os.path.join(base_dir, os.pardir, os.pardir, 'config'))

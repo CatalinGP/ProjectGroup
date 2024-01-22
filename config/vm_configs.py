@@ -1,0 +1,1 @@
+script_filename = "vm_status.sh"
