@@ -56,8 +56,8 @@ def copy_public_key_to_vm(ssh_host, ssh_port, ssh_user, local_public_key_path, s
                 return True
             except AuthenticationException as key_auth_error:
                 logger.warning(f"SSH key-based authentication failed: {key_auth_error}")
-            ssh_password = provide_input(title="Authentication", prompt="Provide Guest OS root password ")
 
+            ssh_password = provide_input(title="Authentication", prompt="Provide Guest OS root password ")
             ssh_client.connect(hostname=ssh_host, port=ssh_port, username=ssh_user, password=ssh_password)
 
             with open(local_public_key_path, 'r') as local_public_key_file:
