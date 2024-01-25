@@ -10,7 +10,6 @@ relative_directory = "tmp/downloaded_utils"
 def check_iso_file(url, filename, relative_directory):
     script_directory = os.path.dirname(os.path.abspath(__file__))
 
-    # Combine the script directory, move up two levels, enter the relative directory, and append the filename
     full_path_dir = os.path.join(script_directory, "..", "..", relative_directory, filename)
 
     # Check if the file already exists
