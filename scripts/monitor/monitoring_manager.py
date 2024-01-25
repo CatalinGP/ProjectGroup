@@ -17,7 +17,8 @@ def run():
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
     target_one_level_upper = os.path.abspath(os.path.join(base_dir, os.pardir))
-    local_status_script_path = os.path.join(target_one_level_upper, "transfer_to", script_filename)
+    status_script_filename = "vm_status.sh"
+    local_status_script_path = os.path.join(target_one_level_upper, "transfer_to", status_script_filename)
 
     config_dir = os.path.abspath(os.path.join(base_dir, os.pardir, os.pardir, 'config'))
     ssh_key_filepath = os.path.join(config_dir, 'ssh_keys', 'id_rsa')
