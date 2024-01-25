@@ -162,4 +162,4 @@ bin
 scripts/ssh/id_rsa
 scripts/ssh/id_rsa.pub
 config/ssh_keys
-tmp/downloaded_utils
+tmp
