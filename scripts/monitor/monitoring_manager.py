@@ -4,7 +4,6 @@ import logging
 from scripts.ssh import ssh_utils
 from config.ssh_configs import ssh_config_dict
 from config.GUI_input import provide_input
-from config.vm_configs import script_filename
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
