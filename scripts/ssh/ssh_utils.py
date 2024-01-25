@@ -5,11 +5,12 @@ import logging
 from paramiko.ssh_exception import AuthenticationException
 from paramiko import SSHClient, AutoAddPolicy, RSAKey, SSHException
 from scp import SCPClient
-from config.vm_configs import script_filename
 # from config.GUI_input import provide_input
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+status_script_filename = "vm_status.sh"
 
 
 def create_ssh_key(ssh_key_path):
@@ -77,10 +78,12 @@ def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status
             with SCPClient(ssh_client.get_transport()) as scp_client:
                 scp_client.put(local_status_script_path, remote_script_path)
 
-                ssh_client.exec_command(f'chmod +x {script_filename}')
+                ssh_client.exec_command(f'chmod +x {status_script_filename}')
 
         logger.info(f"SCP: File transferred successfully")
         return True
     except SSHException as e:
         logger.error(f"SSH error while transferring script: {e}")
         return False
+
+
