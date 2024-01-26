@@ -3,7 +3,7 @@ Documentation   SSH Connection Test
 Library         SSHLibrary
 Library         Collections
 Library         re
-Variables       robot_accessor.py
+Variables       benchmark_vm_accessor.py
 
 
 *** Test Cases ***
