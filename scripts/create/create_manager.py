@@ -38,6 +38,7 @@ def check_iso_file(url_path, file_name, rel_directory):
 
     return full_path_dir
 
+
 def create_virtual_machine(iso_path):
     try:
         if iso_path is None:
@@ -79,6 +80,7 @@ def create_virtual_machine(iso_path):
 
     except Exception as e:
         logger.error(f"Error creating virtual machine: {e}")
+
 
 iso_path = check_iso_file(url, filename, relative_directory)
 create_virtual_machine(iso_path)
