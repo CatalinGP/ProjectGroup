@@ -4,6 +4,7 @@ import subprocess
 import shutil
 from urllib.request import urlopen
 from config.vm_configs import vm_configs_dict
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -49,6 +50,15 @@ def create_virtual_machine(iso_path):
 
         vm_directory = os.path.join(os.path.dirname(__file__), "..", "..", "tmp", "VirtualMachines", vm_name)
 
+        vdi_path = os.path.join("tmp", "VirtualMachines", vm_name, f"{vm_name}.vdi")
+
+        if os.path.exists(vdi_path):
+            logger.info("VDI file already exists. Using existing VDI for virtual machine.")
+            # code for creating with vdi here....
+        else:
+            logger.info("VDI file does not exist. Creating new virtual machine...")
+
+
         logger.info(f"Creating virtual machine with ISO file: {iso_path}")
         logger.info("Creating virtual machine...")
         subprocess.run([vboxmanage_path, "createvm", "--name", vm_name, "--register", "--basefolder", vm_directory])
@@ -56,10 +66,19 @@ def create_virtual_machine(iso_path):
         logger.info("Setting VM attributes...")
         subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--memory", str(ram_size)])
         subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--cpus", str(cpu_count)])
+        subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--graphicscontroller", "vmsvga"])
+
 
         logger.info("Creating storage controllers...")
         subprocess.run([vboxmanage_path, "storagectl", vm_name, "--name", "SATA Controller", "--add", "sata"])
         subprocess.run([vboxmanage_path, "storagectl", vm_name, "--name", "IDE Controller", "--add", "ide"])
+
+
+        # Modify disk name to ensure uniqueness
+        vdi_name = f"{vm_name}_{int(time.time())}.vdi"  # Append timestamp to make it unique
+        vdi_path = os.path.join(vm_directory, vdi_name)
+        logger.info(f"VDI file path: {vdi_path}")
+
 
         logger.info("Creating virtual hard disk...")
         vdi_filename = f"{vm_name}.vdi"
@@ -72,6 +91,7 @@ def create_virtual_machine(iso_path):
 
         logger.info("Attaching ISO to IDE Controller...")
         subprocess.run([vboxmanage_path, "storageattach", vm_name, "--storagectl", "IDE Controller", "--port", "0", "--device", "0", "--type", "dvddrive", "--medium", iso_path])
+        subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--nic1", "nat", "--natpf1", "ssh,tcp,,2222,,22"])
 
         logger.info("Starting VM...")
         subprocess.run([vboxmanage_path, "startvm", vm_name])
@@ -80,6 +100,7 @@ def create_virtual_machine(iso_path):
 
     except Exception as e:
         logger.error(f"Error creating virtual machine: {e}")
+
 
 
 iso_path = check_iso_file(url, filename, relative_directory)
