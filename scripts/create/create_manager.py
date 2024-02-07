@@ -91,7 +91,7 @@ def create_virtual_machine(iso_path):
 
         logger.info("Attaching ISO to IDE Controller...")
         subprocess.run([vboxmanage_path, "storageattach", vm_name, "--storagectl", "IDE Controller", "--port", "0", "--device", "0", "--type", "dvddrive", "--medium", iso_path])
-        subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--nic1", "nat", "--natpf1", "ssh,tcp,,2222,,22"])
+        subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--nic1", "nat", "--natpf1", "ssh,tcp,,22,,22"])
 
         logger.info("Starting VM...")
         subprocess.run([vboxmanage_path, "startvm", vm_name])
