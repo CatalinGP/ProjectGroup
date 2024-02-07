@@ -8,12 +8,9 @@ from config.vm_configs import vm_configs_dict
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Define the URL and filename
 url = "https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso"
 filename = "ubuntu-22.04.3-live-server-amd64.iso"
-relative_directory = "tmp/downloaded_utils"  # Use forward slashes for consistency
-
-# Full path to VBoxManage
+relative_directory = "tmp/downloaded_utils"
 vboxmanage_path = r"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
 
 
@@ -50,11 +47,9 @@ def create_virtual_machine(iso_path):
         cpu_count = vm_configs_dict.get("cpu_count")
         disk_size = vm_configs_dict.get("disk_size")
 
-        # Define the directory for virtual machine files
         vm_directory = os.path.join(os.path.dirname(__file__), "..", "..", "tmp", "VirtualMachines", vm_name)
 
         logger.info(f"Creating virtual machine with ISO file: {iso_path}")
-
         logger.info("Creating virtual machine...")
         subprocess.run([vboxmanage_path, "createvm", "--name", vm_name, "--register", "--basefolder", vm_directory])
 
@@ -62,16 +57,21 @@ def create_virtual_machine(iso_path):
         subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--memory", str(ram_size)])
         subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--cpus", str(cpu_count)])
 
-        logger.info("Creating storage controller...")
+        logger.info("Creating storage controllers...")
         subprocess.run([vboxmanage_path, "storagectl", vm_name, "--name", "SATA Controller", "--add", "sata"])
+        subprocess.run([vboxmanage_path, "storagectl", vm_name, "--name", "IDE Controller", "--add", "ide"])
 
         logger.info("Creating virtual hard disk...")
-        vdi_path = os.path.join(vm_directory, f"{vm_name}.vdi")
+        vdi_filename = f"{vm_name}.vdi"
+        vdi_path = os.path.join(vm_directory, vdi_filename)
         logger.info(f"VDI file path: {vdi_path}")
         subprocess.run([vboxmanage_path, "createhd", "--filename", vdi_path, "--size", str(disk_size)])
 
-        logger.info("Attaching ISO...")
-        subprocess.run([vboxmanage_path, "storageattach", vm_name, "--storagectl", "SATA Controller", "--port", "0", "--device", "0", "--type", "dvddrive", "--medium", iso_path])
+        logger.info("Attaching HDD to SATA Controller...")
+        subprocess.run([vboxmanage_path, "storageattach", vm_name, "--storagectl", "SATA Controller", "--port", "0", "--device", "0", "--type", "hdd", "--medium", vdi_path])
+
+        logger.info("Attaching ISO to IDE Controller...")
+        subprocess.run([vboxmanage_path, "storageattach", vm_name, "--storagectl", "IDE Controller", "--port", "0", "--device", "0", "--type", "dvddrive", "--medium", iso_path])
 
         logger.info("Starting VM...")
         subprocess.run([vboxmanage_path, "startvm", vm_name])
