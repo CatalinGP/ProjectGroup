@@ -95,9 +95,6 @@ def create_virtual_machine(iso_path):
         # NAT 1
         subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--nic1", "nat", "--natpf1", "ssh,tcp,,22,,22"])
 
-        # NAT 2 host-only
-        subprocess.run([vboxmanage_path, "modifyvm", vm_name, "--nic2", "hostonly", "--hostonlyadapter2", "vboxnet0"])
-
 
         logger.info("Starting VM...")
         subprocess.run([vboxmanage_path, "startvm", vm_name])
@@ -106,7 +103,6 @@ def create_virtual_machine(iso_path):
 
     except Exception as e:
         logger.error(f"Error creating virtual machine: {e}")
-
 
 
 iso_path = check_iso_file(url, filename, relative_directory)
