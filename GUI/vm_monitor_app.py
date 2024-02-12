@@ -6,6 +6,7 @@ from GUI.login_window import LoginWindow
 from GUI.console_redirector import ConsoleRedirector
 from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
 
+
 class VMCPUMonitorApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -71,7 +72,3 @@ class VMCPUMonitorApp(tk.Tk):
         else:
             print("Not enough tabs in the notebook.")
 
-
-if __name__ == "__main__":
-    app = VMCPUMonitorApp()
-    app.mainloop()

@@ -3,6 +3,7 @@ from tkinter import ttk
 from GUI.callbacks import button1_action, button2_action, button3_action
 from GUI.vb_box_integration import VirtualBoxPreview
 
+
 def setup_main_tab(notebook):
     main_tab = ttk.Frame(notebook)
     notebook.add(main_tab, text='Main')
@@ -109,5 +110,10 @@ def setup_log_tab(notebook):
 def setup_vm_tab(notebook):
     vm_tab = ttk.Frame(notebook)
     notebook.add(vm_tab, text='Virtual Machine')
-    VirtualBoxPreview(vm_tab)
+
+    vm_preview_frame = ttk.LabelFrame(vm_tab, text='Virtual Machine Instance Preview')
+    vm_preview_frame.pack(padx=10, pady=10, fill='both', expand=True)
+
+    vm_preview_frame.after(3000,
+                           lambda: VirtualBoxPreview(vm_preview_frame, 'Virtual Machine'))
 

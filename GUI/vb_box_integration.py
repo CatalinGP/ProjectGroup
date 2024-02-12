@@ -1,30 +1,50 @@
-import subprocess
-import win32gui
 import tkinter as tk
-from tkinter import ttk
+from PIL import ImageGrab, ImageTk
+import win32gui
 
 class VirtualBoxPreview:
-    def __init__(self, parent):
-        self.parent = parent
-        self.preview_window = tk.Toplevel()  # Create a Toplevel window for the preview
-        self.preview_window.geometry("200x200")  # Set window geometry for the preview window
-        self.virtualbox_process = subprocess.Popen(["C:\\Program Files\\Oracle\\VirtualBox\\VirtualBox.exe"])
-        self.embed_vm_window()
+    def __init__(self, parent_frame, vm_title, update_interval=1000):
+        self.parent_frame = parent_frame
+        self.vm_title = vm_title
+        self.update_interval = update_interval
+        self.preview_label = tk.Label(parent_frame)
+        self.preview_label.pack()
+        self.update_preview()
 
-    def embed_vm_window(self):
-        self.preview_window.after(100, self.embed_vm_window_after_delay)
+    def update_preview(self):
+        try:
+            # Find the handle of the VirtualBox Manager window
+            vbox_manager_handle = win32gui.FindWindow(None, "Oracle VM VirtualBox Manager")
 
-    def embed_vm_window_after_delay(self):
-        self.virtualbox_handle = None
-        while not self.virtualbox_handle:
-            self.virtualbox_handle = win32gui.FindWindow(None, "Oracle VM VirtualBox Manager")
+            if vbox_manager_handle:
+                # Find the handle of the virtual machine window
+                vm_handle = win32gui.FindWindowEx(vbox_manager_handle, 0, "OracleVirtualBoxMachineWindowClass", self.vm_title)
 
-        self.vm_handle = None
-        while not self.vm_handle:
-            self.vm_handle = win32gui.FindWindowEx(self.virtualbox_handle, 0, "OracleVirtualBoxMachineWindowClass", None)
+                if vm_handle:
+                    # Get the position and size of the virtual machine window
+                    left, top, right, bottom = win32gui.GetWindowRect(vm_handle)
 
-        frame_handle = self.preview_window.winfo_id()
-        win32gui.SetParent(self.vm_handle, frame_handle)
-        win32gui.MoveWindow(self.vm_handle, 0, 0, self.preview_window.winfo_width(),
-                            self.preview_window.winfo_height(), True)
+                    # Capture a screenshot of the virtual machine window
+                    screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
 
+                    # Resize the screenshot to fit the preview label
+                    screenshot = screenshot.resize((300, 200), ImageGrab.Image.ANTIALIAS)
+
+                    # Convert the screenshot to a Tkinter compatible format
+                    photo = ImageTk.PhotoImage(screenshot)
+
+                    # Update the preview label with the new screenshot
+                    self.preview_label.configure(image=photo)
+                    self.preview_label.image = photo
+                else:
+                    # Virtual machine window not found
+                    self.preview_label.configure(text="Virtual machine window not found")
+            else:
+                # VirtualBox Manager window not found
+                self.preview_label.configure(text="VirtualBox Manager not found")
+
+        except Exception as e:
+            print("Error updating preview:", e)
+
+        # Schedule the next update
+        self.parent_frame.after(self.update_interval, self.update_preview)
