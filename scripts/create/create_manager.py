@@ -50,7 +50,8 @@ def create_virtual_machine(iso_path):
             return
 
         vm_directory = os.path.join(os.path.dirname(__file__), "..", "..", "tmp", "VirtualMachines", vm_name)
-        vdi_name = f"{vm_name}_{int(time.time())}_{random.randint(0, 1000)}.vdi"  # Make it more unique
+        vdi_name = f"{vm_name}_{int(time.time())}_{random.randint(0, 1000)}.vdi"
+        # noinspection PyTypeChecker
         vdi_path = os.path.join(vm_directory, vdi_name)
         logger.info(f"VDI file path: {vdi_path}")
 
@@ -87,6 +88,12 @@ def create_virtual_machine(iso_path):
         subprocess.run([vboxmanage_path, "startvm", vm_name])
 
         logger.info("Virtual machine created and started successfully.")
+
+    except FileNotFoundError as e:
+        logger.error(f"Error: VirtualBox executable not found at '{vboxmanage_path}'")
+
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Error: VirtualBox command failed with return code {e.returncode}")
 
     except Exception as e:
         logger.error(f"Error creating virtual machine: {e}")
