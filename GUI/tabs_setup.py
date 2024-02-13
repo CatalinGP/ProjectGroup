@@ -8,10 +8,15 @@ def setup_main_tab(notebook):
     main_tab = ttk.Frame(notebook)
     notebook.add(main_tab, text='Main')
 
+    def _create_vm_with_disabled_button():
+        button1.config(state=tk.DISABLED)
+        button1_action()
+        button1.config(state=tk.NORMAL)
+
     actions_group = ttk.LabelFrame(main_tab, text='Actions')
     actions_group.grid(row=0, column=0, padx=10, pady=10, sticky='w')
 
-    button1 = tk.Button(actions_group, text="Create", command=button1_action)
+    button1 = tk.Button(actions_group, text="Create", command=_create_vm_with_disabled_button)
     button1.grid(row=0, column=0, padx=5, pady=5)
 
     button2 = tk.Button(actions_group, text="Destroy", command=button2_action)
