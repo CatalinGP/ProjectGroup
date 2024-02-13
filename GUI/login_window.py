@@ -4,7 +4,7 @@ from tkinter import messagebox
 
 
 class LoginWindow(tk.Toplevel):
-    def __init__(self, master, on_login):
+    def __init__(self, master, login):
         super().__init__(master)
         self.title("Login")
         self.geometry("300x150")
@@ -24,9 +24,8 @@ class LoginWindow(tk.Toplevel):
         self.button_login = ttk.Button(self, text="Login", command=self.login)
         self.button_login.pack(pady=5)
 
-        self.on_login = on_login
+        self.on_login = login
 
-        # Bind the closing event of this window to the destroy method of the root window
         self.protocol("WM_DELETE_WINDOW", master.destroy)
 
     def center_window(self):
@@ -46,9 +45,9 @@ class LoginWindow(tk.Toplevel):
             self.on_login(username)
             self.destroy()
         else:
-            self.show_login_error()
+            self._show_login_error()
 
-    def show_login_error(self):
+    def _show_login_error(self):
         messagebox.showerror("Login Failed", "Invalid username or password")
 
 

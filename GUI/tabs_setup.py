@@ -22,7 +22,7 @@ def setup_main_tab(notebook):
     button2 = tk.Button(actions_group, text="Destroy", command=button2_action)
     button2.grid(row=0, column=1, padx=5, pady=5)
 
-    button3 = tk.Button(actions_group, text="BackUp VM", command=button3_action)
+    button3 = tk.Button(actions_group, text="Clone", command=button3_action)
     button3.grid(row=0, column=2, padx=5, pady=5)
 
     ios_group = ttk.LabelFrame(main_tab, text='I/O\'s')
