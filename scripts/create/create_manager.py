@@ -21,6 +21,7 @@ class VMManagerCreate:
         self.url = "https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso"
         self.filename = "ubuntu-22.04.3-live-server-amd64.iso"
         self.relative_directory = "tmp/downloaded_utils"
+        self.use_vdi_path = None
 
     def _check_iso_file(self):
         script_directory = os.path.dirname(__file__)
@@ -103,4 +104,3 @@ class VMManagerCreate:
 
         except Exception as e:
             logger.error(f"Error creating virtual machine: {e}")
-
