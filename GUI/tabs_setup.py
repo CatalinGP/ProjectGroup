@@ -16,13 +16,13 @@ def setup_main_tab(notebook):
     actions_group = ttk.LabelFrame(main_tab, text='Actions')
     actions_group.grid(row=0, column=0, padx=10, pady=10, sticky='w')
 
-    button1 = tk.Button(actions_group, text="Create", command=_create_vm_with_disabled_button)
+    button1 = tk.Button(actions_group, text="Create from scratch", command=_create_vm_with_disabled_button)
     button1.grid(row=0, column=0, padx=5, pady=5)
 
-    button2 = tk.Button(actions_group, text="Destroy", command=button2_action)
+    button2 = tk.Button(actions_group, text="Clone VDI", command=button2_action)
     button2.grid(row=0, column=1, padx=5, pady=5)
 
-    button3 = tk.Button(actions_group, text="Clone", command=button3_action)
+    button3 = tk.Button(actions_group, text="Create from VDI", command=button3_action)
     button3.grid(row=0, column=2, padx=5, pady=5)
 
     ios_group = ttk.LabelFrame(main_tab, text='I/O\'s')

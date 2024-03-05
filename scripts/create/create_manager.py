@@ -3,8 +3,6 @@ import logging
 import subprocess
 import shutil
 from urllib.request import urlopen
-import time
-import random
 from config.vm_configs import vm_configs_dict
 
 logging.basicConfig(level=logging.INFO)
@@ -52,7 +50,7 @@ class VMManagerCreate:
                 return
 
             vm_directory = os.path.join(os.path.dirname(__file__), "..", "..", "tmp", "VirtualMachines", self.vm_name)
-            vdi_name = f"{self.vm_name}_{int(time.time())}_{random.randint(0, 1000)}.vdi"
+            vdi_name = f"{self.vm_name}.vdi"
             vdi_path = os.path.join(vm_directory, vdi_name)
             logger.info(f"VDI file path: {vdi_path}")
 

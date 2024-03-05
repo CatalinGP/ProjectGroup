@@ -12,7 +12,7 @@ class VMManagerCreateFromVDI:
         self.vm_name = vm_configs_dict.get("vm_name")
         self.ram_size = vm_configs_dict.get("ram_size")
         self.cpu_count = vm_configs_dict.get("cpu_count")
-        self.disk_size = vm_configs_dict.get("disk_size")  # Note: Might not be needed for VDI restoration
+        self.disk_size = vm_configs_dict.get("disk_size")
         self.vboxmanage_path = r"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
         self.backup_directory = os.path.join(os.path.dirname(__file__), "..", "..", "tmp", "backup_VM")
 
