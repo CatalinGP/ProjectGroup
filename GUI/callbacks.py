@@ -2,7 +2,7 @@ def button1_action():
     from scripts.create.create_manager import VMManagerCreate
     new_box = VMManagerCreate()
     new_box.create_virtual_machine()
-    print("Button 1 clicked!")
+    print("Creating Virtual Machine!")
 
 
 def button2_action():
@@ -11,7 +11,7 @@ def button2_action():
     vm_name = vm_configs_dict.get("vm_name")
     new_box = VMClone(vm_name)
     new_box.clone_and_delete_vm()
-    print("Button 2 clicked!")
+    print("VDI cloned and VM unregistered!")
 
 
 def button3_action():

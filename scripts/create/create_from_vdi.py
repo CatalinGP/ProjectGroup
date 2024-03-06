@@ -44,6 +44,11 @@ class VMManagerCreateFromVDI:
             subprocess.run([self.vboxmanage_path, "storageattach", self.vm_name, "--storagectl", "SATA Controller", "--port", "0", "--device", "0", "--type", "hdd", "--medium", vdi_path], check=True)
 
             logger.info("VM created successfully with VDI from backup.")
+
+            logger.info("Starting VM...")
+            subprocess.run([self.vboxmanage_path, "startvm", self.vm_name], check=True)
+            logger.info(f"VM '{self.vm_name}' started successfully.")
+
         except subprocess.CalledProcessError as e:
             logger.error(f"VirtualBox command failed: {e}")
 
@@ -53,8 +58,8 @@ class VMManagerCreateFromVDI:
         self.create_vm_from_vdi(self.find_backup_vdi())
 
 
-#if __name__ == "__main__":
-    #vm_manager = VMManagerCreateFromVDI()
-    #backup_vdi_path = vm_manager.find_backup_vdi()
-    #if backup_vdi_path:
-        #vm_manager.create_vm_from_vdi(backup_vdi_path)
+# if __name__ == "__main__":
+#     vm_manager = VMManagerCreateFromVDI()
+#     backup_vdi_path = vm_manager.find_backup_vdi()
+#     if backup_vdi_path:
+#     vm_manager.create_vm_from_vdi(backup_vdi_path)
