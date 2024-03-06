@@ -15,5 +15,7 @@ def button2_action():
 
 
 def button3_action():
-    print("Button 3 clicked!")
-
+    from scripts.create.create_from_vdi import VMManagerCreateFromVDI
+    new_box = VMManagerCreateFromVDI()
+    new_box.create_vm_from_backup_vdi()
+    print("Success", "VM created successfully from backup VDI.")

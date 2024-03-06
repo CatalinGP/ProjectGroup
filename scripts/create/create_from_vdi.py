@@ -25,7 +25,7 @@ class VMManagerCreateFromVDI:
 
     def create_vm_from_vdi(self, vdi_path):
         if not vdi_path:
-            return  # Exit if no VDI path is provided
+            return
 
         vm_directory = os.path.join(os.path.dirname(__file__), "..", "..", "tmp", "VirtualMachines", self.vm_name)
         os.makedirs(vm_directory, exist_ok=True)
@@ -47,8 +47,14 @@ class VMManagerCreateFromVDI:
         except subprocess.CalledProcessError as e:
             logger.error(f"VirtualBox command failed: {e}")
 
-if __name__ == "__main__":
-    vm_manager = VMManagerCreateFromVDI()
-    backup_vdi_path = vm_manager.find_backup_vdi()
-    if backup_vdi_path:
-        vm_manager.create_vm_from_vdi(backup_vdi_path)
+
+    def create_vm_from_backup_vdi(self):
+        self.find_backup_vdi()
+        self.create_vm_from_vdi(self.find_backup_vdi())
+
+
+#if __name__ == "__main__":
+    #vm_manager = VMManagerCreateFromVDI()
+    #backup_vdi_path = vm_manager.find_backup_vdi()
+    #if backup_vdi_path:
+        #vm_manager.create_vm_from_vdi(backup_vdi_path)
