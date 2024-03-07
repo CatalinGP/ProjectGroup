@@ -16,6 +16,7 @@ class VMCPUMonitorApp(tk.Tk):
         self.login_window = None
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.notebook = None
+        self.header = None
 
     def setup_authentication(self):
         self.withdraw()
@@ -48,7 +49,7 @@ class VMCPUMonitorApp(tk.Tk):
         main_frame = ttk.Frame(self)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        header = Header(main_frame, sign_out_func=self.sign_out)
+        header = Header(main_frame, sign_out_func=self.sign_out, user_type=self.user_type)
         header.grid(row=0, column=0, sticky="nsew")
 
         notebook = ttk.Notebook(main_frame)
