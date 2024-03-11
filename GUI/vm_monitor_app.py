@@ -1,7 +1,9 @@
 import sys
+import time
+import threading
 import tkinter as tk
-from GUI.header import Header
 from tkinter import ttk, messagebox
+from GUI.header import Header
 from GUI.login_window import LoginWindow
 from GUI.console_redirector import ConsoleRedirector
 from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
@@ -10,13 +12,18 @@ from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setu
 class VMCPUMonitorApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Virtual machine monitoring manager")
+        self.log_text = None
+        self.log_update = None
         self.user_type = None
-        self.setup_authentication()
         self.login_window = None
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        self.notebook = None
         self.header = None
+        self.notebook = None
+        self.init_ui()
+
+    def init_ui(self):
+        self.title("Virtual machine monitoring manager")
+        self.setup_authentication()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def setup_authentication(self):
         self.withdraw()
@@ -73,3 +80,19 @@ class VMCPUMonitorApp(tk.Tk):
         else:
             print("Not enough tabs in the notebook.")
 
+    def start_monitoring_thread(self):
+        threading.Thread(target=self.monitor_vm, daemon=True).start()
+
+    def monitor_vm(self):
+        for i in range(10):
+            time.sleep(1)  # Simulate monitoring process
+            # Safely update the GUI with the monitoring status
+            self.log_text.after(0, self.log_update, f"Monitoring... {i + 1}")
+
+            # Final update
+        self.log_text.after(0, self.log_update, "Monitoring completed!")
+
+        def log_update(self, text):
+            # Update the log_text widget with new text
+            self.log_text.insert(tk.END, text + '\n')
+            self.log_text.see(tk.END)
