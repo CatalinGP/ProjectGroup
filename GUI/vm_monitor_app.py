@@ -85,14 +85,11 @@ class VMCPUMonitorApp(tk.Tk):
 
     def monitor_vm(self):
         for i in range(10):
-            time.sleep(1)  # Simulate monitoring process
-            # Safely update the GUI with the monitoring status
+            time.sleep(1)
             self.log_text.after(0, self.log_update, f"Monitoring... {i + 1}")
 
-            # Final update
         self.log_text.after(0, self.log_update, "Monitoring completed!")
 
         def log_update(self, text):
-            # Update the log_text widget with new text
             self.log_text.insert(tk.END, text + '\n')
             self.log_text.see(tk.END)
