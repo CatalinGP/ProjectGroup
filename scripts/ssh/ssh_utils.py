@@ -74,8 +74,8 @@ class SSHKeyManager:
             logger.error(f"An unexpected error occurred: {e}")
         return False
 
-
-
+    def key_exists(self, ssh_key_filepath):
+        pass
 
 
 # def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status_script_path, remote_script_path):
@@ -100,3 +100,26 @@ class SSHKeyManager:
 #     except Exception:
 #         logger.error("Unexpected error occurred during script transfer.")
 #        return False
+
+def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status_script_path, remote_script_path, password):
+    try:
+        ssh_key = RSAKey.from_private_key_file(ssh_key_filepath)
+        with SSHClient() as ssh_client:
+            ssh_client.set_missing_host_key_policy(AutoAddPolicy())
+            ssh_client.connect(hostname=ssh_host, port=ssh_port, username=ssh_user, pkey=ssh_key, password=password)
+
+            with SCPClient(ssh_client.get_transport()) as scp_client:
+                scp_client.put(local_status_script_path, remote_script_path)
+            stdin, stdout, stderr = ssh_client.exec_command(f'chmod +x {remote_script_path}')
+            if stderr.read():
+                raise SSHException("Error setting execute permission on remote script.")
+
+            logger.info("File transferred and permissions set successfully.")
+            return True
+
+    except SSHException:
+        logger.error("SSH error occurred while transferring the script.")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error occurred during script transfer: {str(e)}")
+        return False
