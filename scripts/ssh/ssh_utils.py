@@ -73,11 +73,6 @@ class SSHKeyManager:
         return False
 
 
-
-<<<<<<< HEAD
-=======
-
-
 # def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status_script_path, remote_script_path):
 #     try:
 #         ssh_key = RSAKey.from_private_key_file(ssh_key_filepath)
@@ -100,4 +95,3 @@ class SSHKeyManager:
 #     except Exception:
 #         logger.error("Unexpected error occurred during script transfer.")
 #        return False
->>>>>>> refs/remotes/origin/main
