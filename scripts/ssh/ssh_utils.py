@@ -1,11 +1,9 @@
 import subprocess
 import os
-import sys
 import logging
 from paramiko.ssh_exception import AuthenticationException
-from paramiko import SSHClient, AutoAddPolicy, RSAKey, SSHException
+from paramiko import SSHClient, AutoAddPolicy, SSHException
 from scp import SCPClient
-# from config.GUI_input import provide_input
 from config.ssh_configs import ssh_config_dict
 
 logging.basicConfig(level=logging.INFO)
