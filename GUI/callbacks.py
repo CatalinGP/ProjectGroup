@@ -19,3 +19,21 @@ def button3_action():
     new_box = VMManagerCreateFromVDI()
     new_box.create_vm_from_backup_vdi()
     print("Success", "VM created successfully from backup VDI.")
+
+def button4_action():
+    from tkinter import simpledialog, messagebox
+    from scripts.ssh.ssh_utils import SSHKeyManager
+    ssh_manager = SSHKeyManager()
+
+
+    password = simpledialog.askstring("Password", "Enter VM password:", show='*')
+    if password is None:  # User cancelled the prompt
+            messagebox.showwarning("Cancelled", "Operation cancelled.")
+            return
+
+
+    if ssh_manager.generate_and_copy_key(password):
+            messagebox.showinfo("Success", "SSH key generated and copied successfully.")
+    else:
+            messagebox.showerror("Failure", "Failed to copy SSH key.")
+
