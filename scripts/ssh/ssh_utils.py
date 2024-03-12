@@ -92,4 +92,3 @@ def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status
         logger.error("Unexpected error occurred during script transfer.")
         return False
 
-
