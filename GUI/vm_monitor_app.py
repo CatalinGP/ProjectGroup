@@ -13,7 +13,6 @@ class VMCPUMonitorApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.log_text = None
-        self.log_update = None
         self.user_type = None
         self.login_window = None
         self.header = None
@@ -69,6 +68,7 @@ class VMCPUMonitorApp(tk.Tk):
 
         self.notebook = notebook
         self.setup_console_output()
+        self.start_monitoring_thread()
 
     def setup_console_output(self):
         if len(self.notebook.tabs()) >= 3:
@@ -83,13 +83,12 @@ class VMCPUMonitorApp(tk.Tk):
     def start_monitoring_thread(self):
         threading.Thread(target=self.monitor_vm, daemon=True).start()
 
-    def monitor_vm(self):
-        for i in range(10):
-            time.sleep(1)
-            self.log_text.after(0, self.log_update, f"Monitoring... {i + 1}")
+    @staticmethod
+    def monitor_vm():
+        time.sleep(5)
+        print("Monitoring thread started...")
+        return True
 
-        self.log_text.after(0, self.log_update, "Monitoring completed!")
-
-        def log_update(self, text):
-            self.log_text.insert(tk.END, text + '\n')
-            self.log_text.see(tk.END)
+    def log_update(self, text):
+        self.log_text.insert(tk.END, text + '\n')
+        self.log_text.see(tk.END)
