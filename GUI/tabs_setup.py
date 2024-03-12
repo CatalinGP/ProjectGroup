@@ -25,7 +25,7 @@ def setup_main_tab(notebook):
     button3 = tk.Button(actions_group, text="Create from VDI", command=button3_action)
     button3.grid(row=0, column=2, padx=5, pady=5)
 
-    button4 = tk.Button(actions_group, text="Create SSH Key", command=button4_action)
+    button4 = tk.Button(actions_group, text="Create & Copy SSH Key", command=button4_action)
     button4.grid(row=0, column=3, padx=5, pady=5)
 
     ios_group = ttk.LabelFrame(main_tab, text='I/O\'s')
