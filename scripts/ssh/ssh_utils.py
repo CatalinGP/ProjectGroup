@@ -74,6 +74,8 @@ class SSHKeyManager:
 
 
 
+<<<<<<< HEAD
+=======
 
 
 # def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status_script_path, remote_script_path):
@@ -98,3 +100,4 @@ class SSHKeyManager:
 #     except Exception:
 #         logger.error("Unexpected error occurred during script transfer.")
 #        return False
+>>>>>>> refs/remotes/origin/main
