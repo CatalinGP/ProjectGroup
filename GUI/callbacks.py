@@ -19,3 +19,8 @@ def button3_action():
     new_box = VMManagerCreateFromVDI()
     new_box.create_vm_from_backup_vdi()
     print("Success", "VM created successfully from backup VDI.")
+
+def button4_action():
+    from scripts.ssh.ssh_utils import SSHKeyManager
+    ssh_manager = SSHKeyManager()
+    ssh_manager.generate_key()
