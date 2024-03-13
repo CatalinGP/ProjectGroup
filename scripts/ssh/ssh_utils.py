@@ -14,13 +14,13 @@ status_script_filename = "vm_status.sh"
 
 class SSHKeyManager:
     def __init__(self, relative_path='config/ssh_keys', key_name="id_rsa"):
-        base_dir = os.path.dirname(__file__)
+        base_dir = os.path.join(os.path.dirname(__file__), "..", "..")
         self.folder_path = os.path.abspath(os.path.join(base_dir, relative_path))
         self.key_name = key_name
         self.ssh_key_path = os.path.join(self.folder_path, key_name)
         self.ssh_host = ssh_config_dict.get("host")
         self.ssh_port = ssh_config_dict.get("port")
-        self.ssh_user = ssh_config_dict.get("user")
+        # self.ssh_user = ssh_config_dict.get("user")
 
     def is_vm_reachable(self):
         try:
@@ -30,12 +30,11 @@ class SSHKeyManager:
         except subprocess.SubprocessError:
             return False
 
-    def generate_and_copy_key(self, password):
+    def generate_and_copy_key(self, user, password):
 
         if not os.path.exists(self.folder_path):
             os.makedirs(self.folder_path)
             logger.info(f"Created directory: {self.folder_path}")
-
 
         if not os.path.exists(self.ssh_key_path):
             logger.info("Generating SSH key...")
@@ -56,10 +55,10 @@ class SSHKeyManager:
         try:
             with SSHClient() as ssh:
                 ssh.set_missing_host_key_policy(AutoAddPolicy())
-                ssh.connect(self.ssh_host, port=self.ssh_port, username=self.ssh_user, password=password)
+                ssh.connect(self.ssh_host, port=self.ssh_port, username=user, password=password)
 
                 with SCPClient(ssh.get_transport()) as scp:
-                    target_path = f'/home/{self.ssh_user}/.ssh/authorized_keys'
+                    target_path = f'/home/{user}/.ssh/authorized_keys'
                     scp.put(public_key_path, target_path)
                     logger.info(f"Successfully copied the SSH public key to {self.ssh_host}:{target_path}")
 
