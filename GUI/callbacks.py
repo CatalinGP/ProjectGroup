@@ -26,6 +26,10 @@ def button4_action():
     from scripts.ssh.ssh_utils import SSHKeyManager
     ssh_manager = SSHKeyManager()
 
+    user = simpledialog.askstring("User name", "Enter VM username:")
+    if user is None:  # User cancelled the prompt
+            messagebox.showwarning("Cancelled", "Operation cancelled.")
+            return
 
     password = simpledialog.askstring("Password", "Enter VM password:", show='*')
     if password is None:  # User cancelled the prompt
@@ -33,7 +37,7 @@ def button4_action():
             return
 
 
-    if ssh_manager.generate_and_copy_key(password):
+    if ssh_manager.generate_and_copy_key(user, password):
             messagebox.showinfo("Success", "SSH key generated and copied successfully.")
     else:
             messagebox.showerror("Failure", "Failed to copy SSH key.")
