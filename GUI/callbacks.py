@@ -1,6 +1,6 @@
 from paramiko import config
 from tkinter import simpledialog, messagebox
-from scripts.ssh.ssh_utils import SSHKeyManager, transfer_script
+from scripts.ssh.ssh_utils import SSHKeyManager
 
 
 def button1_action():
@@ -48,33 +48,22 @@ def button4_action():
     else:
             messagebox.showerror("Failure", "Failed to copy SSH key.")
 
-def button5_action(scripts=None, vm_status=None, ssh_host=None, ssh_port=None, ssh_user=None):
-    local_script_path = config.SSHConfigDict
-    ssh_key_filepath = config.SSHConfig
-    remote_script_path = vm_status.sh
+def button5_action():
 
     ssh_manager = SSHKeyManager()
-    if not ssh_manager.key_exists(ssh_key_filepath):
-        messagebox.showerror("Error", "SSH key does not exist. Please generate and copy the key first.")
+
+    user = simpledialog.askstring("User name", "Enter VM username:")
+    if user is None:  # User cancelled the prompt
+        messagebox.showwarning("Cancelled", "Operation cancelled.")
         return
 
-    if transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_script_path, remote_script_path):
+    password = simpledialog.askstring("Password", "Enter VM password:", show='*')
+    if password is None:  # User cancelled the prompt
+        messagebox.showwarning("Cancelled", "Operation cancelled.")
+        return
+
+    if ssh_manager.transfer_script(user, password):
         messagebox.showinfo("Success", "Script transferred successfully.")
     else:
         messagebox.showerror("Failure", "Failed to transfer script.")
 
-
-def button5_action(scripts=None, vm_status=None, ssh_host=None, ssh_port=None, ssh_user=None):
-    local_script_path = config.SSHConfigDict
-    ssh_key_filepath = config.SSHConfig
-    remote_script_path = vm_status.sh
-
-    ssh_manager = SSHKeyManager()
-    if not ssh_manager.key_exists(ssh_key_filepath):
-        messagebox.showerror("Error", "SSH key does not exist. Please generate and copy the key first.")
-        return
-
-    if transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_script_path, remote_script_path):
-        messagebox.showinfo("Success", "Script transferred successfully.")
-    else:
-        messagebox.showerror("Failure", "Failed to transfer script.")
