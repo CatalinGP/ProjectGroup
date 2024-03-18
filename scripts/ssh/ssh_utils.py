@@ -11,8 +11,6 @@ from config.ssh_configs import ssh_config_dict
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-status_script_filename = "vm_status.sh"
-
 
 class SSHKeyManager:
     def __init__(self, relative_path='config/ssh_keys', key_name="id_rsa"):
@@ -22,7 +20,7 @@ class SSHKeyManager:
         self.ssh_key_path = os.path.join(self.folder_path, key_name)
         self.ssh_host = ssh_config_dict.get("host")
         self.ssh_port = ssh_config_dict.get("port")
-        # self.ssh_user = ssh_config_dict.get("user")
+
 
     def is_vm_reachable(self):
         try:
@@ -73,6 +71,7 @@ class SSHKeyManager:
             logger.error(f"An unexpected error occurred: {e}")
         return False
 
+
     def transfer_script(self, user):
         try:
             remote_script_path = f'/home/{user}'
@@ -97,4 +96,8 @@ class SSHKeyManager:
             return False
         except Exception as e:
             logger.error(f"Unexpected error occurred during script transfer: {str(e)}")
+
             return False
+
+         
+
