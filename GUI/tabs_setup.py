@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from GUI.callbacks import button1_action, button2_action, button3_action, button4_action, button5_action
 from GUI.vb_box_integration import VirtualBoxPreview
+from config.system_info import get_system_info
 
 
 def setup_main_tab(notebook):
@@ -111,6 +112,25 @@ def setup_config_tab(notebook):
 
     user_entry = tk.Entry(ssh_params_group)
     user_entry.grid(row=2, column=1, padx=5, pady=5, sticky='w')
+
+    #system info
+
+    total_ram_gb, cpu_count, disk_details = get_system_info()
+    system_info_group = ttk.LabelFrame(config_tab, text='System Info')
+    system_info_group.grid(row=2, column=0, padx=10, pady=10, sticky='w')
+
+
+
+    ram_label = tk.Label(system_info_group, text=f"Total RAM: {total_ram_gb:.2f} GB")
+    ram_label.pack()
+
+
+    cpu_label = tk.Label(system_info_group, text=f"CPU Count: {cpu_count}")
+    cpu_label.pack()
+
+    for mount_point, free_space_gb in disk_details.items():
+        disk_label = tk.Label(system_info_group, text=f"Free space on {mount_point}: {free_space_gb:.2f} GB")
+        disk_label.pack()
 
 
 def setup_log_tab(notebook):
