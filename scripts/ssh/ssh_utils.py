@@ -1,6 +1,8 @@
 import subprocess
 import os
 import logging
+
+from paramiko.rsakey import RSAKey
 from paramiko.ssh_exception import AuthenticationException
 from paramiko import SSHClient, AutoAddPolicy, SSHException
 from scp import SCPClient
@@ -71,26 +73,28 @@ class SSHKeyManager:
             logger.error(f"An unexpected error occurred: {e}")
         return False
 
-
-# def transfer_script(ssh_key_filepath, ssh_host, ssh_port, ssh_user, local_status_script_path, remote_script_path):
-#     try:
-#         ssh_key = RSAKey.from_private_key_file(ssh_key_filepath)
-#         with SSHClient() as ssh_client:
-#             ssh_client.set_missing_host_key_policy(AutoAddPolicy())
-#             ssh_client.connect(hostname=ssh_host, port=ssh_port, username=ssh_user, pkey=ssh_key)
-#
-#             with SCPClient(ssh_client.get_transport()) as scp_client:
-#                 scp_client.put(local_status_script_path, remote_script_path)
-#             stdin, stdout, stderr = ssh_client.exec_command(f'chmod +x {remote_script_path}/{status_script_filename}')
-#             if stderr.read():
-#                 raise SSHException("Error setting execute permission on remote script.")
-#
-#             logger.info("File transferred and permissions set successfully.")
-#             return True
-#
-#     except SSHException:
-#         logger.error("SSH error occurred while transferring the script.")
-#         return False
-#     except Exception:
-#         logger.error("Unexpected error occurred during script transfer.")
-#        return False
+    def transfer_script(self, user):
+        try:
+            remote_script_path = f'/home/{user}'
+            with SSHClient() as ssh_client:
+                ssh_client.set_missing_host_key_policy(AutoAddPolicy())
+                ssh_key = RSAKey.from_private_key_file(self.ssh_key_path)
+                ssh_client.connect(hostname=self.ssh_host, port=self.ssh_port, username=user,
+                                   pkey=ssh_key)
+                base_dir = os.path.join(os.path.dirname(__file__))
+                transfer_script = "vm_status.sh"
+                target_one_level_upper = os.path.abspath(os.path.join(base_dir, os.pardir))
+                local_status_script_path = os.path.join(target_one_level_upper, "transfer_to", transfer_script)
+                with SCPClient(ssh_client.get_transport()) as scp_client:
+                    scp_client.put(local_status_script_path, remote_script_path)
+                stdin, stdout, stderr = ssh_client.exec_command(f'chmod +x {remote_script_path}')
+                if stderr.read():
+                    raise SSHException("Error setting execute permission on remote script.")
+                logger.info("File transferred and permissions set successfully.")
+                return True
+        except SSHException:
+            logger.error("SSH error occurred while transferring the script.")
+            return False
+        except Exception as e:
+            logger.error(f"Unexpected error occurred during script transfer: {str(e)}")
+            return False
