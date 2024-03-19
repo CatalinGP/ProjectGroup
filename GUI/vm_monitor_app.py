@@ -31,21 +31,26 @@ class VMCPUMonitorApp(tk.Tk):
 
     def setup_authentication(self):
         self.withdraw()
-        self.login_window = LoginWindow(self, self.on_login)
-        login_result = create_login_window(dropdown_users=False, require_password=False)
-        user, password = login_result
+        # self.login_window = LoginWindow(self, self.on_login)
+        login_result = create_login_window(parent=self, dropdown_users=True, require_password=False)  # Using the create_login_window function
+        if login_result:
+            username, user_type = login_result
+            self.user_type = user_type
+            self.deiconify()
+            self.setup_window()
+        else:
+            self.destroy()
 
-
-    def on_login(self, user_type):
-        self.deiconify()
-        self.user_type = user_type
-        self.setup_window()
-
-    def sign_out(self):
-        self.withdraw()
-        self.login_window = LoginWindow(self, self.on_login)
-        self.user_type = None
-
+    # def on_login(self, user_type):
+    #     self.deiconify()
+    #     self.user_type = user_type
+    #     self.setup_window()
+    #
+    # def sign_out(self):
+    #     self.withdraw()
+    #     self.login_window = LoginWindow(self, self.on_login)
+    #     self.user_type = None
+    #
     def setup_window(self):
         for widget in self.winfo_children():
             widget.destroy()
@@ -66,7 +71,7 @@ class VMCPUMonitorApp(tk.Tk):
         main_frame = ttk.Frame(self)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        header = Header(main_frame, sign_out_func=self.sign_out, user_type=self.user_type)
+        header = Header(main_frame, user_type=self.user_type)
         header.grid(row=0, column=0, sticky="nsew")
 
         notebook = ttk.Notebook(main_frame)
