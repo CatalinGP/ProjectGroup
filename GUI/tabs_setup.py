@@ -3,6 +3,8 @@ from tkinter import ttk
 from GUI.callbacks import button1_action, button2_action, button3_action, button4_action, button5_action
 from GUI.vb_box_integration import VirtualBoxPreview
 from config.system_info import get_system_info
+from config.vm_configs import vm_configs_dict
+import tkinter.messagebox as messagebox
 
 
 def setup_main_tab(notebook):
@@ -67,29 +69,41 @@ def setup_config_tab(notebook):
     vm_params_group = ttk.LabelFrame(config_tab, text='VM Parameters Config')
     vm_params_group.grid(row=0, column=0, padx=10, pady=10, sticky='w')
 
-    vm_name_label = tk.Label(vm_params_group, text="VM Name:")
+    vm_name_label = tk.Label(vm_params_group, text="VM Name (default main):")
     vm_name_label.grid(row=0, column=0, padx=5, pady=5, sticky='e')
 
     vm_name_entry = tk.Entry(vm_params_group)
     vm_name_entry.grid(row=0, column=1, padx=5, pady=5, sticky='w')
 
-    vm_ram_label = tk.Label(vm_params_group, text="VM RAM Size:")
+    vm_ram_label = tk.Label(vm_params_group, text="VM RAM Size (default 2):")
     vm_ram_label.grid(row=1, column=0, padx=5, pady=5, sticky='e')
 
     vm_ram_entry = tk.Entry(vm_params_group)
     vm_ram_entry.grid(row=1, column=1, padx=5, pady=5, sticky='w')
 
-    vm_cpu_label = tk.Label(vm_params_group, text="VM CPU Size:")
-    vm_cpu_label.grid(row=2, column=0, padx=5, pady=5, sticky='e')
-
-    vm_cpu_entry = tk.Entry(vm_params_group)
-    vm_cpu_entry.grid(row=2, column=1, padx=5, pady=5, sticky='w')
-
-    vm_cpu_count_label = tk.Label(vm_params_group, text="VM CPU Count:")
+    vm_cpu_count_label = tk.Label(vm_params_group, text="VM CPU Count (default 1):")
     vm_cpu_count_label.grid(row=3, column=0, padx=5, pady=5, sticky='e')
 
     vm_cpu_count_entry = tk.Entry(vm_params_group)
     vm_cpu_count_entry.grid(row=3, column=1, padx=5, pady=5, sticky='w')
+
+    disk_size_label = tk.Label(vm_params_group, text="Disk Size (default 25GB):")
+    disk_size_label.grid(row=2, column=0, padx=5, pady=5, sticky='e')
+
+    disk_size_entry = tk.Entry(vm_params_group)
+    disk_size_entry.grid(row=2, column=1, padx=5, pady=5, sticky='w')
+
+    def update_vm_config():
+        vm_configs_dict["vm_name"] = vm_name_entry.get() or vm_configs_dict["vm_name"]
+        vm_configs_dict["ram_size"] = int(vm_ram_entry.get()) if vm_ram_entry.get() else vm_configs_dict["ram_size"]
+        vm_configs_dict["cpu_count"] = int(vm_cpu_count_entry.get()) if vm_cpu_count_entry.get() else vm_configs_dict[
+            "cpu_count"]
+        vm_configs_dict["disk_size"] = int(disk_size_entry.get()) if disk_size_entry.get() else vm_configs_dict["disk_size"]
+
+        messagebox.showinfo("Changes Saved", "VM configuration has been updated successfully.")
+
+    update_button = tk.Button(vm_params_group, text="Update VM Config", command=update_vm_config)
+    update_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
 
     # SSH Parameters Config Group Box
     ssh_params_group = ttk.LabelFrame(config_tab, text='SSH Parameters Config')
