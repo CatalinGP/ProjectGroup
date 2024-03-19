@@ -4,7 +4,7 @@ import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
 from GUI.header import Header
-from GUI.login_win import create_login_window
+from GUI.login_window import create_login_window
 from GUI.console_redirector import ConsoleRedirector
 from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
 

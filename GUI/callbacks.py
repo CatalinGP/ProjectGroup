@@ -26,7 +26,7 @@ def button4_action():
     from scripts.ssh.ssh_utils import SSHKeyManager
     ssh_manager = SSHKeyManager()
 
-    from GUI.login_win import create_login_window
+    from GUI.login_window import create_login_window
     login_result = create_login_window(dropdown_users=False, require_password=True)
     user, password = login_result
 
@@ -41,7 +41,7 @@ def button5_action():
     from scripts.ssh.ssh_utils import SSHKeyManager
     ssh_manager = SSHKeyManager()
 
-    from GUI.login_win import create_login_window
+    from GUI.login_window import create_login_window
 
     login_result = create_login_window(dropdown_users=False, require_password=False)
     user, password = login_result
