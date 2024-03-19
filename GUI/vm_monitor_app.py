@@ -4,7 +4,6 @@ import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
 from GUI.header import Header
-from GUI.login_window import LoginWindow
 from GUI.login_win import create_login_window
 from GUI.console_redirector import ConsoleRedirector
 from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
@@ -31,8 +30,7 @@ class VMCPUMonitorApp(tk.Tk):
 
     def setup_authentication(self):
         self.withdraw()
-        # self.login_window = LoginWindow(self, self.on_login)
-        login_result = create_login_window(parent=self, dropdown_users=True, require_password=False)  # Using the create_login_window function
+        login_result = create_login_window(parent=self, dropdown_users=True, require_password=False)
         if login_result:
             username, user_type = login_result
             self.user_type = user_type
@@ -41,16 +39,6 @@ class VMCPUMonitorApp(tk.Tk):
         else:
             self.destroy()
 
-    # def on_login(self, user_type):
-    #     self.deiconify()
-    #     self.user_type = user_type
-    #     self.setup_window()
-    #
-    # def sign_out(self):
-    #     self.withdraw()
-    #     self.login_window = LoginWindow(self, self.on_login)
-    #     self.user_type = None
-    #
     def setup_window(self):
         for widget in self.winfo_children():
             widget.destroy()
