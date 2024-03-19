@@ -9,14 +9,18 @@ from GUI.console_redirector import ConsoleRedirector
 from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
 
 
+def monitor_vm():
+    time.sleep(5)
+    print("Monitoring thread started...")
+    return True
+
+
 class VMCPUMonitorApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.log_text = None
+        self.notebook = None
         self.user_type = None
         self.login_window = None
-        self.header = None
-        self.notebook = None
         self.init_ui()
 
     def init_ui(self):
@@ -42,7 +46,10 @@ class VMCPUMonitorApp(tk.Tk):
         for widget in self.winfo_children():
             widget.destroy()
         self.setup_geometry()
-        self.setup_main_frame()
+        self.notebook = self.setup_main_frame()
+        self.setup_tabs()
+        self.setup_console_output()
+        self.start_threads()
 
     def on_closing(self):
         if messagebox.askokcancel("Exit", "Do you want to exit?"):
@@ -60,35 +67,24 @@ class VMCPUMonitorApp(tk.Tk):
 
         notebook = ttk.Notebook(main_frame)
         notebook.grid(row=1, column=0, sticky="nsew")
+        return notebook
 
-        setup_main_tab(notebook)
-        setup_config_tab(notebook)
-        setup_log_tab(notebook)
-        setup_vm_tab(notebook)
-
-        self.notebook = notebook
-        self.setup_console_output()
-        self.start_monitoring_thread()
+    def setup_tabs(self):
+        setup_main_tab(self.notebook)
+        setup_config_tab(self.notebook)
+        setup_log_tab(self.notebook)
+        setup_vm_tab(self.notebook)
 
     def setup_console_output(self):
         if len(self.notebook.tabs()) >= 3:
             tab3 = self.notebook.tabs()[2]
             tab3_frame = self.notebook.nametowidget(tab3)
-            self.log_text = tk.Text(tab3_frame, wrap="word", height=20, width=80)
-            self.log_text.grid(row=0, column=0, padx=10, pady=10)
-            sys.stdout = ConsoleRedirector(self.log_text)
+            log_text = tk.Text(tab3_frame, wrap="word", height=20, width=80)
+            log_text.grid(row=0, column=0, padx=10, pady=10)
+            sys.stdout = ConsoleRedirector(log_text)
         else:
             print("Not enough tabs in the notebook.")
 
-    def start_monitoring_thread(self):
-        threading.Thread(target=self.monitor_vm, daemon=True).start()
-
     @staticmethod
-    def monitor_vm():
-        time.sleep(5)
-        print("Monitoring thread started...")
-        return True
-
-    def log_update(self, text):
-        self.log_text.insert(tk.END, text + '\n')
-        self.log_text.see(tk.END)
+    def start_threads():
+        threading.Thread(target=monitor_vm, daemon=True).start()
