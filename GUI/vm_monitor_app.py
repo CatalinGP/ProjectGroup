@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from GUI.header import Header
 from GUI.login_window import LoginWindow
+from GUI.login_win import create_login_window
 from GUI.console_redirector import ConsoleRedirector
 from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
 
@@ -31,6 +32,9 @@ class VMCPUMonitorApp(tk.Tk):
     def setup_authentication(self):
         self.withdraw()
         self.login_window = LoginWindow(self, self.on_login)
+        login_result = create_login_window(dropdown_users=False, require_password=False)
+        user, password = login_result
+
 
     def on_login(self, user_type):
         self.deiconify()

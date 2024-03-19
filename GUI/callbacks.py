@@ -1,7 +1,3 @@
-from tkinter import simpledialog, messagebox
-from scripts.ssh.ssh_utils import SSHKeyManager
-
-
 def button1_action():
     from scripts.create.create_manager import VMManagerCreate
     new_box = VMManagerCreate()
@@ -26,19 +22,13 @@ def button3_action():
 
 
 def button4_action():
-    from tkinter import simpledialog, messagebox
+    from tkinter import messagebox
     from scripts.ssh.ssh_utils import SSHKeyManager
     ssh_manager = SSHKeyManager()
 
-    user = simpledialog.askstring("User name", "Enter VM username:")
-    if user is None:  # User cancelled the prompt
-        messagebox.showwarning("Cancelled", "Operation cancelled.")
-        return
-
-    password = simpledialog.askstring("Password", "Enter VM password:", show='*')
-    if password is None:  # User cancelled the prompt
-        messagebox.showwarning("Cancelled", "Operation cancelled.")
-        return
+    from GUI.login_win import create_login_window
+    login_result = create_login_window(dropdown_users=False, require_password=True)
+    user, password = login_result
 
     if ssh_manager.generate_and_copy_key(user, password):
         messagebox.showinfo("Success", "SSH key generated and copied successfully.")
@@ -47,17 +37,16 @@ def button4_action():
 
 
 def button5_action():
-    from tkinter import simpledialog, messagebox
+    from tkinter import messagebox
     from scripts.ssh.ssh_utils import SSHKeyManager
     ssh_manager = SSHKeyManager()
 
-    user = simpledialog.askstring("User name", "Enter VM username:")
-    if user is None:  # User cancelled the prompt
-            messagebox.showwarning("Cancelled", "Operation cancelled.")
-            return
+    from GUI.login_win import create_login_window
 
+    login_result = create_login_window(dropdown_users=False, require_password=False)
+    user, password = login_result
 
     if ssh_manager.transfer_script(user):
-            messagebox.showinfo("Success", "SSH key generated and copied successfully.")
+        messagebox.showinfo("Success", "SSH key generated and copied successfully.")
     else:
-            messagebox.showerror("Failure", "Failed to copy SSH key.")
+        messagebox.showerror("Failure", "Failed to copy SSH key.")
