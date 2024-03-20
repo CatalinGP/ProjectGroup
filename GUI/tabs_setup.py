@@ -57,7 +57,6 @@ def setup_main_tab(notebook):
     actions_group.place(relx=0.5, rely=0.5, anchor='center')
 
 
-
 def setup_config_tab(notebook):
     config_tab = ttk.Frame(notebook)
     notebook.add(config_tab, text='Configuration')
