@@ -19,7 +19,6 @@ def setup_main_tab(notebook):
 
     background_image = PhotoImage(file="media/background_image.PNG")
 
-
     background_label = tk.Label(main_tab, image=background_image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
@@ -34,14 +33,15 @@ def setup_main_tab(notebook):
     actions_group_style = ttk.Style()
     actions_group_style.configure('DarkGrey.TLabelframe', background='#001F3F', foreground='#00FFFF', font=('Arial', 16, 'bold'))
 
-
-    button_style = ttk.Style()
-    button_style.configure('DarkGrey.TButton', foreground='dark blue')
-
     actions_group = ttk.LabelFrame(main_tab, style='DarkGrey.TLabelframe')
     actions_group.pack(pady=10)
 
+    #buttons style
+    button_style = ttk.Style()
+    button_style.configure('DarkGrey.TButton', foreground='dark blue')
 
+
+    #buttons
     button1 = ttk.Button(actions_group, text="New VM", command=_create_vm_with_disabled_button)
     button2 = ttk.Button(actions_group, text="Save VDI", command=button2_action)
     button3 = ttk.Button(actions_group, text="Load VDI", command=button3_action)
