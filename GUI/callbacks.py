@@ -50,3 +50,9 @@ def button5_action():
         messagebox.showinfo("Success", "SSH key generated and copied successfully.")
     else:
         messagebox.showerror("Failure", "Failed to copy SSH key.")
+
+def button6_action(notebook):
+    notebook.select(1)
+
+def button7_action(notebook):
+    notebook.select(0)

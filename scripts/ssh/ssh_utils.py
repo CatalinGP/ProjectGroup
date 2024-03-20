@@ -21,6 +21,7 @@ class SSHKeyManager:
         self.ssh_host = ssh_config_dict.get("host")
         self.ssh_port = ssh_config_dict.get("port")
 
+
     def is_vm_reachable(self):
         try:
             response = subprocess.run(['ping', '-n', '1', self.ssh_host], stdout=subprocess.DEVNULL,
@@ -70,6 +71,7 @@ class SSHKeyManager:
             logger.error(f"An unexpected error occurred: {e}")
         return False
 
+
     def transfer_script(self, user):
         try:
             remote_script_path = f'/home/{user}'
@@ -94,4 +96,5 @@ class SSHKeyManager:
             return False
         except Exception as e:
             logger.error(f"Unexpected error occurred during script transfer: {str(e)}")
+
             return False
