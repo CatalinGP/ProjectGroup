@@ -96,8 +96,4 @@ class SSHKeyManager:
             return False
         except Exception as e:
             logger.error(f"Unexpected error occurred during script transfer: {str(e)}")
-
             return False
-
-
-

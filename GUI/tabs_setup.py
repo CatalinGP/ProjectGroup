@@ -7,6 +7,7 @@ from config.vm_configs import vm_configs_dict
 from config.update_vm_config import update_current_values, update_vm_config
 from tkinter import PhotoImage
 
+
 def setup_main_tab(notebook):
     global background_image
 
@@ -36,19 +37,15 @@ def setup_main_tab(notebook):
     actions_group = ttk.LabelFrame(main_tab, style='DarkGrey.TLabelframe')
     actions_group.pack(pady=10)
 
-    #buttons style
     button_style = ttk.Style()
     button_style.configure('DarkGrey.TButton', foreground='dark blue')
 
-
-    #buttons
     button1 = ttk.Button(actions_group, text="New VM", command=_create_vm_with_disabled_button)
     button2 = ttk.Button(actions_group, text="Save VDI", command=button2_action)
     button3 = ttk.Button(actions_group, text="Load VDI", command=button3_action)
     button6 = ttk.Button(actions_group, text="Settings", command=lambda: button6_action(notebook))
     button4 = ttk.Button(actions_group, text="Generate SSH Key", command=button4_action)
     button5 = ttk.Button(actions_group, text="Transfer item", command=button5_action)
-
 
     for button in [button1, button2, button3, button4, button5, button6]:
         button.config(width=25, style='DarkGrey.TButton')
@@ -61,11 +58,9 @@ def setup_config_tab(notebook):
     config_tab = ttk.Frame(notebook)
     notebook.add(config_tab, text='Configuration')
 
-    # Background Image
     background_label = tk.Label(config_tab, image=background_image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    # VM Parameters Config Group Box
     vm_params_group = ttk.LabelFrame(config_tab, text='VM Parameters Config')
     vm_params_group.grid(row=0, column=0, padx=10, pady=10, sticky='w')
 
@@ -93,7 +88,6 @@ def setup_config_tab(notebook):
                               )
     update_button.grid(row=len(labels_and_entries), column=0, columnspan=2, padx=5, pady=5)
 
-    # SSH Parameters Config Group Box
     ssh_params_group = ttk.LabelFrame(config_tab, text='SSH Parameters Config')
     ssh_params_group.grid(row=1, column=0, padx=10, pady=10, sticky='w')
 
@@ -108,11 +102,9 @@ def setup_config_tab(notebook):
         label.grid(row=i, column=0, padx=5, pady=5, sticky='e')
         entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
 
-    # Back Button
     back_button = tk.Button(config_tab, text="Back", command=lambda: button7_action(notebook))
     back_button.grid(row=1, column=2, padx=10, pady=10, sticky='se')
 
-    # System Info
     total_ram_gb, cpu_count, disk_details = get_system_info()
     system_info_group = ttk.LabelFrame(config_tab, text='Windows System Info')
     system_info_group.grid(row=0, column=2, padx=10, pady=10, sticky='w')
