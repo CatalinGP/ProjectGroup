@@ -58,3 +58,4 @@ def button6_action(notebook):
 
 def button7_action(notebook):
     notebook.select(0)
+
