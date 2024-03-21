@@ -42,7 +42,7 @@ def setup_main_tab(notebook):
     button_style.configure('DarkGrey.TButton', foreground='dark blue')
 
     button1 = ttk.Button(actions_group, text="New VM", command=_create_vm_with_disabled_button)
-    button8 = ttk.Button(actions_group, text="Continue VDI", command=button8_action)
+    button8 = ttk.Button(actions_group, text="Continue VM", command=button8_action)
     button2 = ttk.Button(actions_group, text="Save VDI", command=button2_action)
     button3 = ttk.Button(actions_group, text="Load VDI", command=button3_action)
     button6 = ttk.Button(actions_group, text="Settings", command=lambda: button6_action(notebook))
@@ -55,7 +55,7 @@ def setup_main_tab(notebook):
 
     actions_group.place(relx=0.5, rely=0.5, anchor='center')
 
-    bottom_label = tk.Label(main_tab, text='Ver. 0.20.72, Early Access', font=('Arial', 10, 'italic'), fg='#8881fe', bg="#000000")
+    bottom_label = tk.Label(main_tab, text='Ver. 2.072, Early Access', font=('Arial', 10, 'italic'), fg='#8881fe', bg="#000000")
     bottom_label.place(relx=0.5, rely=0.9, anchor='center')
 
 
@@ -66,8 +66,11 @@ def setup_config_tab(notebook):
     background_label = tk.Label(config_tab, image=background_image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    config_group = ttk.LabelFrame(config_tab, text='VM Parameters')
-    config_group.grid(row=0, column=0, padx=10, pady=10, sticky='w')
+    info_label = tk.Label(config_tab, text="If there are empty boxes, the VM will be created with default values.\nFor custom host and port, they must be manually created first.", font=('Arial', 12, 'bold'), fg="#8881fe", bg="#000000")
+    info_label.place(relx=0.5, rely=0.9, anchor='center')
+
+    config_group = ttk.LabelFrame(config_tab, text='VM Parameters', style='LightGrey.TLabelframe')
+    config_group.place(relx=0.1, rely=0.5, anchor='w')
 
     labels_and_entries = [
         ("Name:", tk.Entry(config_group)),
@@ -84,25 +87,25 @@ def setup_config_tab(notebook):
         if entry:
             entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
 
-    current_values_frame = ttk.LabelFrame(config_tab, text='Current Values')
-    current_values_frame.grid(row=0, column=1, padx=10, pady=10, sticky='w')
+    current_values_frame = ttk.LabelFrame(config_tab, text='Current Creation Info')
+    current_values_frame.place(relx=0.6, rely=0.5, anchor='e')
     update_current_values(current_values_frame, vm_configs_dict, ssh_config_dict)
 
-    update_button = tk.Button(config_group, text="Update VM Config",
+    update_button = tk.Button(config_group, text="Update Config",
                               command=lambda: update_vm_config(
                                   labels_and_entries[0][1], labels_and_entries[1][1],
                                   labels_and_entries[3][1], labels_and_entries[2][1],
-                                  vm_configs_dict, current_values_frame)
+                                  labels_and_entries[4][1], labels_and_entries[5][1],
+                                  vm_configs_dict, ssh_config_dict, current_values_frame)
                               )
     update_button.grid(row=len(labels_and_entries), column=0, columnspan=2, padx=5, pady=5)
 
-
     back_button = tk.Button(config_tab, text="Back", command=lambda: button7_action(notebook))
-    back_button.grid(row=1, column=2, padx=10, pady=10, sticky='se')
+    back_button.place(relx=0.8, rely=0.8, anchor='se')
 
     total_ram_gb, cpu_count, disk_details = get_system_info()
     system_info_group = ttk.LabelFrame(config_tab, text='Windows System Info')
-    system_info_group.grid(row=0, column=2, padx=10, pady=10, sticky='w')
+    system_info_group.place(relx=0.9, rely=0.1, anchor='ne')
 
     system_info_labels = [
         f"Total RAM: {total_ram_gb:.2f} GB",
@@ -111,7 +114,7 @@ def setup_config_tab(notebook):
 
     for info_text in system_info_labels:
         label = tk.Label(system_info_group, text=info_text)
-        label.pack()
+        label.pack(anchor='w')
 
 
 def setup_log_tab(notebook):
