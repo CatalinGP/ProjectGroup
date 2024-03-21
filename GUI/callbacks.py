@@ -10,14 +10,16 @@ def button2_action():
     from scripts.create.clone_vdi import VMClone
     vm_name = vm_configs_dict.get("vm_name")
     new_box = VMClone(vm_name)
-    new_box.clone_and_delete_vm()
+    new_box.clone_vdi()
     print("VDI cloned and VM unregistered!")
 
 
 def button3_action():
     from scripts.create.create_from_vdi import VMManagerCreateFromVDI
-    new_box = VMManagerCreateFromVDI()
-    new_box.create_vm_from_backup_vdi()
+    from config.vm_configs import vm_configs_dict
+    vm_name = vm_configs_dict.get("vm_name")
+    new_box = VMManagerCreateFromVDI(vm_name)
+    new_box.create_from_vdi()
     print("Success", "VM created successfully from backup VDI.")
 
 
@@ -58,3 +60,9 @@ def button6_action(notebook):
 
 def button7_action(notebook):
     notebook.select(0)
+
+
+def button8_action():
+    from scripts.backup.start_vm import StartVM
+    start_vm = StartVM()
+    start_vm.start_virtual_machine()

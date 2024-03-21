@@ -17,7 +17,7 @@ class VMManagerCreate:
         self.disk_size = vm_configs_dict.get("disk_size")
         self.vboxmanage_path = r"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
         self.url = "https://www.releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso"
-        self.filename = "ubuntu-22.04.3-live-server-amd64.iso"
+        self.filename = "ubuntu-22.04.4-live-server-amd64.iso"
         self.relative_directory = "tmp/downloaded_utils"
         self.use_vdi_path = None
 
