@@ -55,7 +55,7 @@ def setup_main_tab(notebook):
 
     actions_group.place(relx=0.5, rely=0.5, anchor='center')
 
-    bottom_label = tk.Label(main_tab, text='Ver. 2.072, Early Access', font=('Arial', 10, 'italic'), fg='#8881fe', bg="#000000")
+    bottom_label = tk.Label(main_tab, text='Build 2.072, Early Access', font=('Arial', 10, 'italic'), fg='#8881fe', bg="#000000")
     bottom_label.place(relx=0.5, rely=0.9, anchor='center')
 
 
