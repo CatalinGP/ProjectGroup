@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+
+
 from GUI.callbacks import button1_action, button2_action, button3_action, button4_action, button5_action, button6_action, button7_action
 from GUI.vb_box_integration import VirtualBoxPreview
 from config.system_info import get_system_info
@@ -53,7 +55,7 @@ def setup_main_tab(notebook):
 
     actions_group.place(relx=0.5, rely=0.5, anchor='center')
 
-
+@verify_user_guest_or_admin
 def setup_config_tab(notebook):
     config_tab = ttk.Frame(notebook)
     notebook.add(config_tab, text='Configuration')
@@ -71,10 +73,12 @@ def setup_config_tab(notebook):
         ("CPU Count:", tk.Entry(vm_params_group))
     ]
 
+
     for i, (label_text, entry) in enumerate(labels_and_entries):
         label = tk.Label(vm_params_group, text=label_text)
         label.grid(row=i, column=0, padx=5, pady=5, sticky='e')
         entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
+
 
     current_values_frame = ttk.LabelFrame(config_tab, text='Current Values')
     current_values_frame.grid(row=0, column=1, padx=10, pady=10, sticky='w')
@@ -133,3 +137,4 @@ def setup_vm_tab(notebook):
 
     vm_preview_frame.after(3000,
                            lambda: VirtualBoxPreview(vm_preview_frame, 'Virtual Machine'))
+

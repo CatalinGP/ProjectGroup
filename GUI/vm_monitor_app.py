@@ -23,6 +23,7 @@ class VMCPUMonitorApp(tk.Tk):
         self.login_window = None
         self.init_ui()
 
+
     def init_ui(self):
         self.title("Virtual machine monitoring manager")
         self.setup_authentication()
