@@ -1,13 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
-
-
-from GUI.callbacks import button1_action, button2_action, button3_action, button4_action, button5_action, button6_action, button7_action
+from GUI.callbacks import button1_action, button2_action, button3_action, button4_action, button5_action, button6_action, button7_action, button8_action
 from GUI.vb_box_integration import VirtualBoxPreview
 from config.system_info import get_system_info
 from config.vm_configs import vm_configs_dict
+from config.ssh_configs import ssh_config_dict
 from config.update_vm_config import update_current_values, update_vm_config
 from tkinter import PhotoImage
+from GUI import gray_input
 
 
 def setup_main_tab(notebook):
@@ -25,7 +25,7 @@ def setup_main_tab(notebook):
     background_label = tk.Label(main_tab, image=background_image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    title_label = tk.Label(main_tab, text="CyberForge", font=('Arial', 20, 'bold'), fg="#33FFFF", bg="#000000")
+    title_label = tk.Label(main_tab, text="CyberForge", font=('Arial', 20, 'bold'), fg="#8881fe", bg="#000000")
     title_label.pack(pady=(25, 40))
 
     def _create_vm_with_disabled_button():
@@ -34,7 +34,7 @@ def setup_main_tab(notebook):
         button1.config(state=tk.NORMAL)
 
     actions_group_style = ttk.Style()
-    actions_group_style.configure('DarkGrey.TLabelframe', background='#001F3F', foreground='#00FFFF', font=('Arial', 16, 'bold'))
+    actions_group_style.configure('DarkGrey.TLabelframe', background='#001F3F', font=('Arial', 16, 'bold'))
 
     actions_group = ttk.LabelFrame(main_tab, style='DarkGrey.TLabelframe')
     actions_group.pack(pady=10)
@@ -43,19 +43,23 @@ def setup_main_tab(notebook):
     button_style.configure('DarkGrey.TButton', foreground='dark blue')
 
     button1 = ttk.Button(actions_group, text="New VM", command=_create_vm_with_disabled_button)
+    button8 = ttk.Button(actions_group, text="Continue VM", command=button8_action)
     button2 = ttk.Button(actions_group, text="Save VDI", command=button2_action)
     button3 = ttk.Button(actions_group, text="Load VDI", command=button3_action)
     button6 = ttk.Button(actions_group, text="Settings", command=lambda: button6_action(notebook))
     button4 = ttk.Button(actions_group, text="Generate SSH Key", command=button4_action)
     button5 = ttk.Button(actions_group, text="Transfer item", command=button5_action)
 
-    for button in [button1, button2, button3, button4, button5, button6]:
+    for button in [button1, button8, button2, button3, button4, button5, button6]:
         button.config(width=25, style='DarkGrey.TButton')
         button.pack(side='top', pady=(0, 10), padx=20)
 
     actions_group.place(relx=0.5, rely=0.5, anchor='center')
 
-@verify_user_guest_or_admin
+    bottom_label = tk.Label(main_tab, text='Build 2.072, Early Access', font=('Arial', 10, 'italic'), fg='#8881fe', bg="#000000")
+    bottom_label.place(relx=0.5, rely=0.9, anchor='center')
+
+
 def setup_config_tab(notebook):
     config_tab = ttk.Frame(notebook)
     notebook.add(config_tab, text='Configuration')
@@ -63,55 +67,49 @@ def setup_config_tab(notebook):
     background_label = tk.Label(config_tab, image=background_image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    vm_params_group = ttk.LabelFrame(config_tab, text='VM Parameters Config')
-    vm_params_group.grid(row=0, column=0, padx=10, pady=10, sticky='w')
+    info_label = tk.Label(config_tab, text="If there are empty boxes, the VM will be created with default values.\nFor custom host and port, they must be manually created first.", font=('Arial', 12, 'bold'), fg="#8881fe", bg="#000000")
+    info_label.place(relx=0.5, rely=0.9, anchor='center')
+
+    config_group = ttk.LabelFrame(config_tab, text='VM Parameters', style='LightGrey.TLabelframe')
+    config_group.place(relx=0.1, rely=0.5, anchor='w')
 
     labels_and_entries = [
-        ("Name:", tk.Entry(vm_params_group)),
-        ("RAM Size (in mb):", tk.Entry(vm_params_group)),
-        ("Disk Size (in mb):", tk.Entry(vm_params_group)),
-        ("CPU Count:", tk.Entry(vm_params_group))
+        ("Name:", tk.Entry(config_group)),
+        ("RAM Size (in mb):", tk.Entry(config_group)),
+        ("Disk Size (in mb):", tk.Entry(config_group)),
+        ("CPU Count:", tk.Entry(config_group)),
+        ("Host (SSH):", tk.Entry(config_group)),
+        ("Port (SSH):", tk.Entry(config_group))
     ]
 
-
     for i, (label_text, entry) in enumerate(labels_and_entries):
-        label = tk.Label(vm_params_group, text=label_text)
+        label = tk.Label(config_group, text=label_text)
         label.grid(row=i, column=0, padx=5, pady=5, sticky='e')
-        entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
+        if entry:
+            entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
 
+    current_values_frame = ttk.LabelFrame(config_tab, text='Current Creation Info')
+    current_values_frame.place(relx=0.6, rely=0.5, anchor='e')
+    update_current_values(current_values_frame, vm_configs_dict, ssh_config_dict)
 
-    current_values_frame = ttk.LabelFrame(config_tab, text='Current Values')
-    current_values_frame.grid(row=0, column=1, padx=10, pady=10, sticky='w')
-    update_current_values(current_values_frame, vm_configs_dict)
-
-    update_button = tk.Button(vm_params_group, text="Update VM Config",
+    @wraps
+    update_button = tk.Button(config_group, text="Update Config",
                               command=lambda: update_vm_config(
                                   labels_and_entries[0][1], labels_and_entries[1][1],
                                   labels_and_entries[3][1], labels_and_entries[2][1],
-                                  vm_configs_dict, current_values_frame)
+                                  labels_and_entries[4][1], labels_and_entries[5][1],
+                                  vm_configs_dict, ssh_config_dict, current_values_frame)
                               )
     update_button.grid(row=len(labels_and_entries), column=0, columnspan=2, padx=5, pady=5)
 
-    ssh_params_group = ttk.LabelFrame(config_tab, text='SSH Parameters Config')
-    ssh_params_group.grid(row=1, column=0, padx=10, pady=10, sticky='w')
 
-    ssh_labels_and_entries = [
-        ("Host:", tk.Entry(ssh_params_group)),
-        ("Port:", tk.Entry(ssh_params_group)),
-        ("User:", tk.Entry(ssh_params_group))
-    ]
-
-    for i, (label_text, entry) in enumerate(ssh_labels_and_entries):
-        label = tk.Label(ssh_params_group, text=label_text)
-        label.grid(row=i, column=0, padx=5, pady=5, sticky='e')
-        entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
 
     back_button = tk.Button(config_tab, text="Back", command=lambda: button7_action(notebook))
-    back_button.grid(row=1, column=2, padx=10, pady=10, sticky='se')
+    back_button.place(relx=0.8, rely=0.8, anchor='se')
 
     total_ram_gb, cpu_count, disk_details = get_system_info()
     system_info_group = ttk.LabelFrame(config_tab, text='Windows System Info')
-    system_info_group.grid(row=0, column=2, padx=10, pady=10, sticky='w')
+    system_info_group.place(relx=0.9, rely=0.1, anchor='ne')
 
     system_info_labels = [
         f"Total RAM: {total_ram_gb:.2f} GB",
@@ -120,7 +118,7 @@ def setup_config_tab(notebook):
 
     for info_text in system_info_labels:
         label = tk.Label(system_info_group, text=info_text)
-        label.pack()
+        label.pack(anchor='w')
 
 
 def setup_log_tab(notebook):
@@ -137,4 +135,3 @@ def setup_vm_tab(notebook):
 
     vm_preview_frame.after(3000,
                            lambda: VirtualBoxPreview(vm_preview_frame, 'Virtual Machine'))
-
