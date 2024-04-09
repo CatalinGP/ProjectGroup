@@ -1,0 +1,5 @@
+[flake8]
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,venv
+ignore = E226,E302,E41
+max-line-length = 120
+max-complexity = 10
