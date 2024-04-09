@@ -1,20 +1,38 @@
+import subprocess
 import sys
-import time
 import threading
+import platform
 import tkinter as tk
 from tkinter import ttk, messagebox
 from GUI.header import Header
 from GUI.login_window import create_login_window
 from GUI.console_redirector import ConsoleRedirector
-from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
+from GUI.tabs_setup import (setup_main_tab,
+                            setup_config_tab,
+                            setup_log_tab,
+                            setup_vm_tab)
+from scripts.ssh.ssh_utils import SSHKeyManager
 
 
 def monitor_vm(stop_event):
     while not stop_event.is_set():
-        time.sleep(5)
-        if stop_event.is_set():
-            break
-        print("Monitoring thread started...")
+        ssh_manager = SSHKeyManager()
+        login_result = create_login_window(dropdown_users=False, require_password=False)
+        user, password = login_result
+
+        ip_address = ssh_manager.get_remote_ip(user)
+
+        param = '-n' if platform.system().lower() == 'windows' else '-c'
+        command = ['ping', param, '1', ip_address]
+
+        try:
+            response = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if response.returncode == 0:
+                return 200
+            else:
+                return 503
+        except subprocess.SubprocessError:
+            return 503
 
 
 class VMCPUMonitorApp(tk.Tk):

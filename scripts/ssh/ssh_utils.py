@@ -95,3 +95,30 @@ class SSHKeyManager:
         except Exception as e:
             logger.error(f"Unexpected error occurred during script transfer: {str(e)}")
             return False
+
+    def get_remote_ip(self, user):
+        """
+        Retrieves the IP address of the remote machine.
+        """
+        try:
+            with SSHClient() as ssh_client:
+                ssh_client.set_missing_host_key_policy(AutoAddPolicy())
+                ssh_key = RSAKey.from_private_key_file(self.ssh_key_path)
+                ssh_client.connect(hostname=self.ssh_host, port=self.ssh_port, username=user, pkey=ssh_key)
+
+                stdin, stdout, stderr = ssh_client.exec_command(
+                    "ip addr | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1")
+                ip_addresses = stdout.read().decode().strip().split('\n')
+                ip_addresses = [ip for ip in ip_addresses if ip]
+
+                for ip in ip_addresses:
+                    logger.info(f"Found IP address: {ip}")
+
+                return ip_addresses
+
+        except SSHException as e:
+            logger.error(f"SSH error occurred while trying to retrieve IP address: {e}")
+        except Exception as e:
+            logger.error(f"Unexpected error occurred: {e}")
+
+        return []
