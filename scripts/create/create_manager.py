@@ -94,7 +94,7 @@ class VMManagerCreate:
 
             logger.info("Virtual machine created and started successfully.")
 
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             logger.error(f"Error: VirtualBox executable not found at '{self.vboxmanage_path}'")
 
         except subprocess.CalledProcessError as e:

@@ -54,16 +54,56 @@ class VMManagerCreateFromVDI:
 
         try:
             logger.info("Creating virtual machine...")
-            subprocess.run([self.vboxmanage_path, "createvm", "--name", self.vm_name, "--register", "--basefolder", vm_directory], check=True)
+            subprocess.run(
+                [self.vboxmanage_path,
+                 "createvm",
+                 "--name",
+                 self.vm_name,
+                 "--register",
+                 "--basefolder",
+                 vm_directory],
+                check=True)
 
             logger.info("Setting VM attributes...")
-            subprocess.run([self.vboxmanage_path, "modifyvm", self.vm_name, "--memory", str(self.ram_size), "--cpus", str(self.cpu_count), "--graphicscontroller", "vmsvga"], check=True)
+            subprocess.run(
+                [self.vboxmanage_path,
+                 "modifyvm",
+                 self.vm_name,
+                 "--memory",
+                 str(self.ram_size),
+                 "--cpus",
+                 str(self.cpu_count),
+                 "--graphicscontroller",
+                 "vmsvga"],
+                check=True)
 
             logger.info("Creating storage controllers...")
-            subprocess.run([self.vboxmanage_path, "storagectl", self.vm_name, "--name", "SATA Controller", "--add", "sata"], check=True)
+            subprocess.run(
+                [self.vboxmanage_path,
+                 "storagectl",
+                 self.vm_name,
+                 "--name",
+                 "SATA Controller",
+                 "--add",
+                 "sata"],
+                check=True)
 
             logger.info("Attaching HDD to SATA Controller...")
-            subprocess.run([self.vboxmanage_path, "storageattach", self.vm_name, "--storagectl", "SATA Controller", "--port", "0", "--device", "0", "--type", "hdd", "--medium", vdi_path], check=True)
+            subprocess.run(
+                [self.vboxmanage_path,
+                 "storageattach",
+                 self.vm_name,
+                 "--storagectl",
+                 "SATA Controller",
+                 "--port",
+                 "0",
+                 "--device",
+                 "0",
+                 "--type",
+                 "hdd",
+                 "--medium",
+                 vdi_path],
+                check=True)
 
             subprocess.run([self.vboxmanage_path, "modifyvm", self.vm_name, "--nic1", "nat", "--natpf1",
                             "ssh,tcp,,22,,22"])

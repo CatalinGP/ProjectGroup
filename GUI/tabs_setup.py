@@ -1,6 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
-from GUI.callbacks import button1_action, button2_action, button3_action, button4_action, button5_action, button6_action, button7_action, button8_action
+from GUI.callbacks import (
+    button1_action,
+    button2_action,
+    button3_action,
+    button4_action,
+    button5_action,
+    button6_action,
+    button7_action,
+    button8_action)
 from GUI.vb_box_integration import VirtualBoxPreview
 from config.system_info import get_system_info
 from config.vm_configs import vm_configs_dict
@@ -55,7 +63,10 @@ def setup_main_tab(notebook):
 
     actions_group.place(relx=0.5, rely=0.5, anchor='center')
 
-    bottom_label = tk.Label(main_tab, text='Build 2.072, Early Access', font=('Arial', 10, 'italic'), fg='#8881fe', bg="#000000")
+    bottom_label = tk.Label(main_tab,
+                            text='Build 2.072, Early Access',
+                            font=('Arial', 10, 'italic'),
+                            fg='#8881fe', bg="#000000")
     bottom_label.place(relx=0.5, rely=0.9, anchor='center')
 
 
@@ -66,7 +77,10 @@ def setup_config_tab(notebook):
     background_label = tk.Label(config_tab, image=background_image)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    info_label = tk.Label(config_tab, text="If there are empty boxes, the VM will be created with default values.\nFor custom host and port, they must be manually created first.", font=('Arial', 12, 'bold'), fg="#8881fe", bg="#000000")
+    info_label = tk.Label(config_tab,
+                          text="If there are empty boxes, the VM will be created with default values."
+                               "\nFor custom host and port, they must be manually created first.",
+                          font=('Arial', 12, 'bold'), fg="#8881fe", bg="#000000")
     info_label.place(relx=0.5, rely=0.9, anchor='center')
 
     config_group = ttk.LabelFrame(config_tab, text='VM Parameters', style='LightGrey.TLabelframe')

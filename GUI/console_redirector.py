@@ -14,5 +14,6 @@ class ConsoleRedirector:
             self.text_widget.config(state="disabled")
         else:
             pass
+
     def flush(self):
         pass

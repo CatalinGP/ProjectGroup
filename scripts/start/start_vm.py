@@ -16,7 +16,7 @@ class StartVM:
             logger.info(f"Starting virtual machine: {self.vm_name}")
             subprocess.run([self.vboxmanage_path, "startvm", self.vm_name])
             logger.info("Virtual machine started successfully.")
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             logger.error(f"Error: VirtualBox executable not found at '{self.vboxmanage_path}'")
         except subprocess.CalledProcessError as e:
             logger.error(f"Error: VirtualBox command failed with return code {e.returncode}")

@@ -2,7 +2,7 @@ from scripts.create.create_manager import VMManagerCreate
 from config.vm_configs import vm_configs_dict
 from scripts.create.clone_vdi import VMClone
 from scripts.create.create_from_vdi import VMManagerCreateFromVDI
-from tkinter import simpledialog, messagebox
+from tkinter import messagebox
 from scripts.ssh.ssh_utils import SSHKeyManager
 from GUI.login_window import create_login_window
 from scripts.start.start_vm import StartVM

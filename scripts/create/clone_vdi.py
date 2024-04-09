@@ -2,12 +2,10 @@ import os
 import logging
 from glob import glob
 import shutil
-import subprocess
-
-from config.vm_configs import vm_configs_dict
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class VMClone:
     def __init__(self, vm_name):
@@ -33,12 +31,3 @@ class VMClone:
                 logger.info(f"VDI file '{vdi_path}' cloned to '{backup_vdi_path}'")
             except Exception as e:
                 logger.error(f"Error cloning VDI file: {e}")
-
-
-
-
-# if __name__ == "__main__":
-#     vm_name = vm_configs_dict.get("vm_name", "DefaultVMName")
-#     vm_clone = VMClone(vm_name)
-#     vm_clone.clone_vdi()
-#     vm_clone.delete_vm_folder()
