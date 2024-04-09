@@ -9,30 +9,49 @@ from GUI.console_redirector import ConsoleRedirector
 from GUI.tabs_setup import setup_main_tab, setup_config_tab, setup_log_tab, setup_vm_tab
 
 
-def monitor_vm():
-    time.sleep(5)
-    print("Monitoring thread started...")
-    return True
+def monitor_vm(stop_event):
+    while not stop_event.is_set():
+        time.sleep(5)
+        if stop_event.is_set():
+            break
+        print("Monitoring thread started...")
 
 
 class VMCPUMonitorApp(tk.Tk):
     def __init__(self):
         super().__init__()
+        self.stop_event = None
+        self.header = None
+        self.username = None
         self.notebook = None
         self.user_type = None
         self.login_window = None
         self.init_ui()
+        self.monitoring_thread = None
 
     def init_ui(self):
         self.title("Virtual machine monitoring manager")
         self.setup_authentication()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
+    def on_logout(self):
+        """
+        Handle user logout, reset the state, and show the login window.
+        """
+        self.username = None
+        self.user_type = None
+        if self.monitoring_thread:
+            self.stop_event.set()
+        for widget in self.winfo_children():
+            widget.destroy()
+        self.setup_authentication()
+
     def setup_authentication(self):
         self.withdraw()
         login_result = create_login_window(parent=self, dropdown_users=True, require_password=False)
         if login_result:
             username, user_type = login_result
+            self.username = username
             self.user_type = user_type
             self.deiconify()
             self.setup_window()
@@ -59,8 +78,8 @@ class VMCPUMonitorApp(tk.Tk):
         main_frame = ttk.Frame(self)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        header = Header(main_frame, user_type=self.user_type)
-        header.grid(row=0, column=0, sticky="nsew")
+        self.header = Header(main_frame, user_type=self.user_type, username=self.username, sign_out_func=self.on_logout)
+        self.header.grid(row=0, column=0, sticky="nsew")
 
         notebook = ttk.Notebook(main_frame)
         notebook.grid(row=1, column=0, sticky="nsew")
@@ -82,6 +101,8 @@ class VMCPUMonitorApp(tk.Tk):
         else:
             print("Not enough tabs in the notebook.")
 
-    @staticmethod
-    def start_threads():
-        threading.Thread(target=monitor_vm, daemon=True).start()
+    def start_threads(self):
+        self.stop_event = threading.Event()
+        self.monitoring_thread = threading.Thread(target=monitor_vm, args=(self.stop_event,), daemon=True)
+        self.monitoring_thread.start()
+        return self.stop_event
