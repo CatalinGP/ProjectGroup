@@ -10,4 +10,4 @@ The year in 2072, humanity's existence hinges on virtual realms, where CyberForg
 - **Last Stand**: The capability to monitor its resources, swiftly clone its VDI and spawn a new instance before it falters.
 - **SSHRunner**: Create an SSH key and move it to your virtual machine. Afterward, transfer your own scripts utilizing this key.
   
-  
+  ![MainMenu](https://github.com/CatalinGP/ProjectGroup/assets/152881093/d474b6a4-51ef-4662-870c-80721152b4aa)
