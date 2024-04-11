@@ -64,9 +64,4 @@ def button7_action(notebook):
 
 def button8_action():
     start_vm = StartVM()
-    if start_vm.start_virtual_machine():
-        messagebox.showinfo("Success", "Loading VM.")
-    else:
-        messagebox.showerror("Failure", "No VM found. Creating a new one...")
-        new_box = VMManagerCreate()
-        new_box.create_virtual_machine()
+    start_vm.start_virtual_machine()
