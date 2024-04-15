@@ -82,7 +82,7 @@ class VMCPUMonitorApp(tk.Tk):
         self.notebook = self.setup_main_frame()
         self.setup_tabs()
         self.setup_console_output()
-        self.start_threads()
+        # self.start_threads()
 
     def on_closing(self):
         if messagebox.askokcancel("Exit", "Do you want to exit?"):
