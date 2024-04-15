@@ -165,3 +165,4 @@ config/ssh_keys
 tmp
 /scripts/ssh/config/ssh_keys/id_rsa
 /scripts/ssh/config/ssh_keys/id_rsa.pub
+/scripts/auto_workflow.py
