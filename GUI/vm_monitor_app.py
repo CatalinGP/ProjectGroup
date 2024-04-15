@@ -19,7 +19,6 @@ def monitor_vm(stop_event):
         ssh_manager = SSHKeyManager()
         login_result = create_login_window(dropdown_users=False, require_password=False)
         user, password = login_result
-
         ip_address = ssh_manager.get_remote_ip(user)
 
         param = '-n' if platform.system().lower() == 'windows' else '-c'
@@ -28,9 +27,9 @@ def monitor_vm(stop_event):
         try:
             response = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             if response.returncode == 0:
-                return 200
+                print('200')
             else:
-                return 503
+                print('500')
         except subprocess.SubprocessError:
             return 503
 
