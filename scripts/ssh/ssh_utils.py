@@ -23,7 +23,8 @@ class SSHKeyManager:
 
     def is_vm_reachable(self):
         try:
-            response = subprocess.run(['ping', '-n', '1', self.ssh_host], stdout=subprocess.DEVNULL,
+            response = subprocess.run(['ping', '-n', '1', self.ssh_host],
+                                      stdout=subprocess.DEVNULL,
                                       stderr=subprocess.DEVNULL)
             return response.returncode == 0
         except subprocess.SubprocessError:
@@ -38,7 +39,9 @@ class SSHKeyManager:
         if not os.path.exists(self.ssh_key_path):
             logger.info("Generating SSH key...")
             try:
-                subprocess.run(["ssh-keygen", "-t", "rsa", "-b", "2048", "-N", "", "-f", self.ssh_key_path], check=True)
+                subprocess.run(["ssh-keygen", "-t", "rsa", "-b", "2048", "-N", "", "-f",
+                                self.ssh_key_path],
+                               check=True)
                 logger.info(f"SSH key generated at {self.ssh_key_path}")
             except subprocess.CalledProcessError as e:
                 logger.error(f"Failed to generate SSH key: {e}")
@@ -76,7 +79,9 @@ class SSHKeyManager:
             with SSHClient() as ssh_client:
                 ssh_client.set_missing_host_key_policy(AutoAddPolicy())
                 ssh_key = RSAKey.from_private_key_file(self.ssh_key_path)
-                ssh_client.connect(hostname=self.ssh_host, port=self.ssh_port, username=user,
+                ssh_client.connect(hostname=self.ssh_host,
+                                   port=self.ssh_port,
+                                   username=user,
                                    pkey=ssh_key)
                 base_dir = os.path.join(os.path.dirname(__file__))
                 transfer_script = "vm_status.sh"
@@ -104,7 +109,12 @@ class SSHKeyManager:
             with SSHClient() as ssh_client:
                 ssh_client.set_missing_host_key_policy(AutoAddPolicy())
                 ssh_key = RSAKey.from_private_key_file(self.ssh_key_path)
-                ssh_client.connect(hostname=self.ssh_host, port=self.ssh_port, username=user, pkey=ssh_key)
+                ssh_client.connect(hostname=self.ssh_host,
+                                   port=self.ssh_port,
+                                   username=user,
+                                   pkey=ssh_key,
+                                   look_for_keys=True,
+                                   allow_agent=False)
 
                 stdin, stdout, stderr = ssh_client.exec_command(
                     "ip addr | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1")
@@ -114,11 +124,11 @@ class SSHKeyManager:
                 for ip in ip_addresses:
                     logger.info(f"Found IP address: {ip}")
 
-                return ip_addresses
+                return ip_addresses[0]
 
         except SSHException as e:
             logger.error(f"SSH error occurred while trying to retrieve IP address: {e}")
         except Exception as e:
             logger.error(f"Unexpected error occurred: {e}")
 
-        return []
+        return None

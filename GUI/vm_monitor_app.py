@@ -1,7 +1,5 @@
-import subprocess
 import sys
 import threading
-import platform
 import tkinter as tk
 from tkinter import ttk, messagebox
 from GUI.header import Header
@@ -11,28 +9,27 @@ from GUI.tabs_setup import (setup_main_tab,
                             setup_config_tab,
                             setup_log_tab,
                             setup_vm_tab)
-from scripts.ssh.ssh_utils import SSHKeyManager
 
 
 def monitor_vm(stop_event):
-    while not stop_event.is_set():
-        ssh_manager = SSHKeyManager()
-        login_result = create_login_window(dropdown_users=False, require_password=False)
-        user, password = login_result
-
-        ip_address = ssh_manager.get_remote_ip(user)
-
-        param = '-n' if platform.system().lower() == 'windows' else '-c'
-        command = ['ping', param, '1', ip_address]
-
-        try:
-            response = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            if response.returncode == 0:
-                return 200
-            else:
-                return 503
-        except subprocess.SubprocessError:
-            return 503
+    pass
+    # while not stop_event.is_set():
+    #     ssh_manager = SSHKeyManager()
+    #     login_result = create_login_window(dropdown_users=False, require_password=False)
+    #     user, password = login_result
+    #     ip_address = ssh_manager.get_remote_ip(user)
+    #
+    #     param = '-n' if platform.system().lower() == 'windows' else '-c'
+    #     command = ['ping', param, '1', ip_address]
+    #
+    #     try:
+    #         response = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    #         if response.returncode == 0:
+    #             print('200')
+    #         else:
+    #             print('500')
+    #     except subprocess.SubprocessError:
+    #         return 503
 
 
 class VMCPUMonitorApp(tk.Tk):
@@ -81,9 +78,25 @@ class VMCPUMonitorApp(tk.Tk):
             widget.destroy()
         self.setup_geometry()
         self.notebook = self.setup_main_frame()
-        self.setup_tabs()
+        self.stop_event = threading.Event()
+
+        tab_setup_thread = threading.Thread(target=self.setup_tabs_threaded, args=(self.stop_event,), daemon=True)
+        tab_setup_thread.start()
+
+        self.monitoring_thread = threading.Thread(target=monitor_vm, args=(self.stop_event,), daemon=True)
+        self.monitoring_thread.start()
+
         self.setup_console_output()
-        self.start_threads()
+
+    def setup_tabs_threaded(self, stop_event):
+        try:
+            import time
+            time.sleep(1)
+            self.setup_tabs()
+            while not stop_event.is_set():
+                time.sleep(1)
+        except Exception as e:
+            print(f"Error occurred during tab setup: {e}")
 
     def on_closing(self):
         if messagebox.askokcancel("Exit", "Do you want to exit?"):
@@ -96,7 +109,10 @@ class VMCPUMonitorApp(tk.Tk):
         main_frame = ttk.Frame(self)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.header = Header(main_frame, user_type=self.user_type, username=self.username, sign_out_func=self.on_logout)
+        self.header = Header(main_frame,
+                             user_type=self.user_type,
+                             username=self.username,
+                             sign_out_func=self.on_logout)
         self.header.grid(row=0, column=0, sticky="nsew")
 
         notebook = ttk.Notebook(main_frame)
@@ -118,9 +134,3 @@ class VMCPUMonitorApp(tk.Tk):
             sys.stdout = ConsoleRedirector(log_text)
         else:
             print("Not enough tabs in the notebook.")
-
-    def start_threads(self):
-        self.stop_event = threading.Event()
-        self.monitoring_thread = threading.Thread(target=monitor_vm, args=(self.stop_event,), daemon=True)
-        self.monitoring_thread.start()
-        return self.stop_event
