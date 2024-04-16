@@ -1,0 +1,4 @@
+site_name: CyberForge Docs
+
+theme:
+  name: material
