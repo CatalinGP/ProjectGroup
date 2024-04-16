@@ -8,7 +8,8 @@ from GUI.callbacks import (
     button5_action,
     button6_action,
     button7_action,
-    button8_action)
+    button8_action,
+    button9_action)
 from GUI.vb_box_integration import VirtualBoxPreview
 from config.system_info import get_system_info
 from config.vm_configs import vm_configs_dict
@@ -56,8 +57,9 @@ def setup_main_tab(notebook):
     button6 = ttk.Button(actions_group, text="Settings", command=lambda: button6_action(notebook))
     button4 = ttk.Button(actions_group, text="Generate SSH Key", command=button4_action)
     button5 = ttk.Button(actions_group, text="Transfer item", command=button5_action)
+    button9 = ttk.Button(actions_group, text="Check VM Status", command=button9_action)
 
-    for button in [button1, button8, button2, button3, button4, button5, button6]:
+    for button in [button1, button8, button2, button3, button4, button5, button6, button9]:
         button.config(width=25, style='DarkGrey.TButton')
         button.pack(side='top', pady=(0, 10), padx=20)
 

@@ -6,6 +6,8 @@ from tkinter import messagebox
 from scripts.ssh.ssh_utils import SSHKeyManager
 from GUI.login_window import create_login_window
 from scripts.start.start_vm import StartVM
+from scripts.start.status_vm import CheckVMStatus
+import time
 
 
 def button1_action():
@@ -64,9 +66,19 @@ def button7_action(notebook):
 
 def button8_action():
     start_vm = StartVM()
-    if start_vm.start_virtual_machine():
-        messagebox.showinfo("Success", "Loading VM.")
+    start_vm.start_virtual_machine()
+
+
+def button9_action():
+    checker = CheckVMStatus()
+    vm_name = vm_configs_dict.get("vm_name")
+    while checker.check_virtual_machine_status():
+        messagebox.showinfo("Status", "Virtual machine is running.")
+        time.sleep(10)
     else:
-        messagebox.showerror("Failure", "No VM found. Creating a new one...")
-        new_box = VMManagerCreate()
-        new_box.create_virtual_machine()
+        messagebox.showwarning("Status", "Virtual machine is not running.")
+        new_box = VMClone(vm_name)
+        new_box.clone_vdi()
+        new_box = VMManagerCreateFromVDI(vm_name)
+        new_box.create_from_vdi()
+
